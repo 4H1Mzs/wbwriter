@@ -27,9 +27,15 @@
 <meta name="twitter:description" content="How to install WBWriter on macOS, set it up for a show, and send the board to an LED wall over NDI® or HDMI.">
 <meta name="twitter:image" content="https://wbwriter.app/og-9eab99cf.png">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "WBWriter quick start", "description": "How to install WBWriter on macOS, set it up for a show, and send the board to an LED wall over NDI® or HDMI.", "url": "https://wbwriter.app/docs/quick-start", "inLanguage": "en", "image": "https://wbwriter.app/og-9eab99cf.png", "about": {"@type": "SoftwareApplication", "name": "WBWriter", "url": "https://wbwriter.app/"}, "publisher": {"@type": "Organization", "name": "4H1M, z.s.", "url": "https://4h1m.com/"}}</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112,700;112,800&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="preload" href="/fonts/archivo-var-ad517450.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/plex-sans-var-676a1a97.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:"Archivo";font-style:normal;font-weight:500 800;font-stretch:112% 125%;font-display:swap;src:url(/fonts/archivo-var-ad517450.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-style:normal;font-weight:400 600;font-display:swap;src:url(/fonts/plex-sans-var-676a1a97.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/plex-mono-400-0f395b10.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:500;font-display:swap;src:url(/fonts/plex-mono-500-a521013b.woff2) format("woff2")}
+@font-face{font-family:"Caveat";font-style:normal;font-weight:700;font-display:swap;src:url(/fonts/caveat-700-f4ee4fbd.woff2) format("woff2")}
+</style>
 <style>
 :root {
   --bg: #0d0a12; --surface: #16111d; --line: #2a2233; --fg: #f2eef8; --muted: #a59bb3;
@@ -110,11 +116,11 @@ footer .wrap { display: flex; justify-content: space-between; gap: 12px 24px; fl
 </div></div>
 <header class="top"><div class="wrap">
   <div class="brand-block">
-    <a class="brand" href="/"><img src="/img/wbwriter-mark.png" alt="">WBWriter</a>
+    <a class="brand" href="/"><img src="/img/wbwriter-mark-68-9c17d8d8.webp" alt="" width="34" height="34">WBWriter</a>
     <a class="byline" href="https://4h1m.com/" aria-label="Open-source tool by 4H1M Production">
       <span>Open-source tool by</span>
-      <img class="logo-on-dark" src="/img/4h1m-logo-white.png" alt="4H1M Production" width="36" height="36">
-      <img class="logo-on-light" src="/img/4h1m-logo.png" alt="4H1M Production" width="36" height="36">
+      <img class="logo-on-dark" src="/img/4h1m-white-72-5bca41ed.webp" alt="4H1M Production" width="36" height="36">
+      <img class="logo-on-light" src="/img/4h1m-black-72-fc75611a.webp" alt="4H1M Production" width="36" height="36">
     </a>
   </div>
   <nav class="nav" aria-label="Docs"><a href="/docs/quick-start" aria-current="page">Quick start</a><a href="/docs/faq">FAQ</a><a class="btn" href="https://github.com/4H1Mzs/wbwriter/releases/latest">Download</a></nav>
@@ -129,21 +135,21 @@ footer .wrap { display: flex; justify-content: space-between; gap: 12px 24px; fl
 <p>Requirements: macOS 13 or later, on Apple Silicon or Intel.</p>
 <h2 id="set-up-the-show"><a class="anchor" href="#set-up-the-show">Set up the show</a></h2>
 <p>All settings are in the setup window and are saved between launches.</p>
-<figure><img src="/img/setup-window-a9afe185.webp" alt="The WBWriter setup window with output, NDI, pen and board settings" loading="lazy"><figcaption>The WBWriter setup window with output, NDI, pen and board settings</figcaption></figure>
+<figure><img src="/img/setup-window-a9afe185.webp" alt="The WBWriter setup window with output, NDI, pen and board settings" width="760" height="1114" loading="lazy" decoding="async"><figcaption>The WBWriter setup window with output, NDI, pen and board settings</figcaption></figure>
 <div class="table"><table><thead><tr><th>Setting</th><th>What to choose</th></tr></thead><tbody><tr><td>Resolution</td><td>Your LED wall's pixel size. Presets: 1920×1080, 3840×2160, 2560×1440, 1280×720, 1080×1920 (portrait), or custom.</td></tr><tr><td>Frame rate</td><td>23.976, 24, 25, 29.97, 30, 50, 59.94 or 60 fps. Match your video system.</td></tr><tr><td>Background</td><td><em>Black</em> for a normal feed. <em>Transparent</em> for an alpha overlay (BGRA, straight alpha).</td></tr><tr><td>Send NDI®</td><td>On or off.</td></tr><tr><td>NDI source name</td><td>Receivers see <code>MACHINE-NAME (your name)</code>.</td></tr><tr><td>Pen color</td><td>White by default.</td></tr><tr><td>Pen width</td><td>Pixels at 1080p, scaled with the output resolution. Default 8 matches OpenBoard's thickest default pen.</td></tr><tr><td>Board display</td><td>Which screen is the touchscreen.</td></tr><tr><td>Margin</td><td>Space around the board on the touchscreen.</td></tr><tr><td>Clear gesture</td><td>Single tap, double tap (safer), or none (no button).</td></tr><tr><td>Clear button</td><td>Which corner of the touchscreen it sits in.</td></tr><tr><td>Corner logo</td><td>A small, faint logo in the bottom-right corner of the touchscreen: 4H1M, your own image, or none. It's never sent to the outputs.</td></tr><tr><td>Hide mouse cursor</td><td>Hides the pointer while live.</td></tr><tr><td>HDMI output</td><td>An external display for a clean full-screen feed, or <em>None</em>.</td></tr><tr><td>Web control</td><td>Off by default. When on, it shows the address to open on a phone, with an optional port and PIN.</td></tr></tbody></table></div>
 <h2 id="go-live"><a class="anchor" href="#go-live">Go live</a></h2>
 <p>Click <strong>Go Live</strong> or press Return. The board fills the touchscreen, and the Dock and menu bar are hidden.</p>
-<figure><img src="/img/board-live-3bd3d179.webp" alt="Live mode on the touchscreen: the black board with a faint border, the clear button in the corner and the status line below" loading="lazy"><figcaption>Live mode on the touchscreen: the black board with a faint border, the clear button in the corner and the status line below</figcaption></figure>
+<figure><img src="/img/board-live-3bd3d179.webp" alt="Live mode on the touchscreen: the black board with a faint border, the clear button in the corner and the status line below" width="1400" height="909" loading="lazy" decoding="async"><figcaption>Live mode on the touchscreen: the black board with a faint border, the clear button in the corner and the status line below</figcaption></figure>
 <ul><li>Write with a finger, pen or mouse.</li><li>Tap the clear button to erase the board. <strong>Backspace</strong> on a keyboard also clears it.</li><li>Press <strong>Esc</strong> to return to setup.</li></ul>
 <h2 id="read-the-status-line"><a class="anchor" href="#read-the-status-line">Read the status line</a></h2>
 <p>A small status line sits outside the board, near the bottom of the touchscreen. When there isn't room below the board, it moves into the margin beside it and wraps onto several lines. It's never sent to NDI or HDMI.</p>
-<figure><img src="/img/status-line-60ecde80.webp" alt="The status line: NDI state, source name, resolution and frame rate, receivers, network traffic and battery" loading="lazy"><figcaption>The status line: NDI state, source name, resolution and frame rate, receivers, network traffic and battery</figcaption></figure>
+<figure><img src="/img/status-line-60ecde80.webp" alt="The status line: NDI state, source name, resolution and frame rate, receivers, network traffic and battery" width="1400" height="39" loading="lazy" decoding="async"><figcaption>The status line: NDI state, source name, resolution and frame rate, receivers, network traffic and battery</figcaption></figure>
 <div class="table"><table><thead><tr><th>Indicator</th><th>Meaning</th></tr></thead><tbody><tr><td>Green <code>NDI OK</code></td><td>Sending at the target frame rate, with at least one receiver connected.</td></tr><tr><td>Yellow <code>NDI waiting</code></td><td>Sending fine, but no receiver is connected yet.</td></tr><tr><td>Red <code>NDI DROPPING</code></td><td>Sending below 90% of the target frame rate.</td></tr><tr><td><code>… fps</code></td><td>Measured send rate.</td></tr><tr><td><code>… rx</code></td><td>Number of connected NDI receivers.</td></tr><tr><td><code>TX … Mb/s</code></td><td>Total outgoing traffic on the Mac's Ethernet and Wi-Fi interfaces.</td></tr><tr><td><code>Battery …%</code></td><td>Shown only on battery power. Turns red at 20% or below.</td></tr></tbody></table></div>
 <h2 id="control-it-from-a-phone"><a class="anchor" href="#control-it-from-a-phone">Control it from a phone</a></h2>
 <p>Turn on <strong>Web control</strong> in the setup window and open one of the addresses it shows (for example <code>http://Stage-Mac.local:8080</code>) on a phone or laptop on the same network.</p>
 <ul><li><strong>Clear board:</strong> tap twice to confirm.</li><li><strong>Message to the performer:</strong> shown in yellow in the hatched area of the touchscreen, never on NDI or HDMI. It stays until you tap <strong>Remove message</strong>, or disappears after 10 seconds, 30 seconds or a minute.</li></ul>
-<figure><img src="/img/web-control-3ca9986a.webp" alt="The WBWriter Remote page on a phone, with Clear board, a message field and Remove message" loading="lazy"><figcaption>The WBWriter Remote page on a phone, with Clear board, a message field and Remove message</figcaption></figure>
-<figure><img src="/img/board-message-226d19b7.webp" alt="A message for the performer shown in yellow below the board on the touchscreen" loading="lazy"><figcaption>A message for the performer shown in yellow below the board on the touchscreen</figcaption></figure>
+<figure><img src="/img/web-control-3ca9986a.webp" alt="The WBWriter Remote page on a phone, with Clear board, a message field and Remove message" width="600" height="1080" loading="lazy" decoding="async"><figcaption>The WBWriter Remote page on a phone, with Clear board, a message field and Remove message</figcaption></figure>
+<figure><img src="/img/board-message-226d19b7.webp" alt="A message for the performer shown in yellow below the board on the touchscreen" width="1400" height="909" loading="lazy" decoding="async"><figcaption>A message for the performer shown in yellow below the board on the touchscreen</figcaption></figure>
 <p>The actions work only while WBWriter is live. Set a PIN if other people share the network. If the macOS firewall is on, allow incoming connections for WBWriter when asked.</p>
 <h2 id="receive-the-feed"><a class="anchor" href="#receive-the-feed">Receive the feed</a></h2>
 <p>Any NDI receiver works, for example vMix, OBS with DistroAV, Resolume, NDI Studio Monitor, TriCaster or disguise. Look for the source named <code>MACHINE (WBWriter)</code>, or whatever name you set.</p>

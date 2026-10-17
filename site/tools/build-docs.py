@@ -37,7 +37,7 @@ def inline(text: str) -> str:
         elif code is not None:
             out.append(f"<code>{html.escape(code, quote=False)}</code>")
         elif src is not None:
-            out.append(f'<img src="{html.escape(local(src))}" alt="{html.escape(alt)}" loading="lazy">')
+            out.append(img_tag(src, alt))
         elif href is not None:
             out.append(f'<a href="{html.escape(local(href))}">{inline(label)}</a>')
         elif bold is not None:
@@ -47,6 +47,33 @@ def inline(text: str) -> str:
         i = m.end()
     out.append(html.escape(text[i:], quote=False))
     return "".join(out)
+
+
+def image_size(src: str):
+    """Width and height of a local WebP or PNG image, read from its header (no image libraries)."""
+    path = PUBLIC / src.lstrip("/")
+    if not src.startswith("/") or not path.is_file():
+        return None
+    data = path.read_bytes()[:64]
+    if data[:4] == b"\x89PNG":
+        return int.from_bytes(data[16:20], "big"), int.from_bytes(data[20:24], "big")
+    if data[:4] == b"RIFF" and data[8:12] == b"WEBP":
+        chunk = data[12:16]
+        if chunk == b"VP8X":
+            return int.from_bytes(data[24:27], "little") + 1, int.from_bytes(data[27:30], "little") + 1
+        if chunk == b"VP8 ":
+            return int.from_bytes(data[26:28], "little") & 0x3FFF, int.from_bytes(data[28:30], "little") & 0x3FFF
+        if chunk == b"VP8L":
+            b = int.from_bytes(data[21:25], "little")
+            return (b & 0x3FFF) + 1, ((b >> 14) & 0x3FFF) + 1
+    return None
+
+
+def img_tag(src: str, alt: str) -> str:
+    src = local(src)
+    size = image_size(src)
+    dims = f' width="{size[0]}" height="{size[1]}"' if size else ""
+    return f'<img src="{html.escape(src)}" alt="{html.escape(alt)}"{dims} loading="lazy" decoding="async">'
 
 
 def local(url: str) -> str:
@@ -115,8 +142,7 @@ def render(md: str):
         m = re.fullmatch(r"!\[([^\]]*)\]\(([^)\s]+)\)", line.strip())
         if m:
             alt, src = m.groups()
-            blocks.append(f'<figure><img src="{html.escape(local(src))}" alt="{html.escape(alt)}" loading="lazy">'
-                          f"<figcaption>{inline(alt)}</figcaption></figure>")
+            blocks.append(f"<figure>{img_tag(src, alt)}<figcaption>{inline(alt)}</figcaption></figure>")
             i += 1
             continue
         para = [line.strip()]
@@ -252,9 +278,15 @@ def page(slug: str, title: str, summary: str, body: str) -> str:
 <meta name="twitter:description" content="{d}">
 <meta name="twitter:image" content="{SITE}/{og_image}">
 <script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112,700;112,800&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="preload" href="/fonts/archivo-var-ad517450.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/plex-sans-var-676a1a97.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{{font-family:"Archivo";font-style:normal;font-weight:500 800;font-stretch:112% 125%;font-display:swap;src:url(/fonts/archivo-var-ad517450.woff2) format("woff2")}}
+@font-face{{font-family:"IBM Plex Sans";font-style:normal;font-weight:400 600;font-display:swap;src:url(/fonts/plex-sans-var-676a1a97.woff2) format("woff2")}}
+@font-face{{font-family:"IBM Plex Mono";font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/plex-mono-400-0f395b10.woff2) format("woff2")}}
+@font-face{{font-family:"IBM Plex Mono";font-style:normal;font-weight:500;font-display:swap;src:url(/fonts/plex-mono-500-a521013b.woff2) format("woff2")}}
+@font-face{{font-family:"Caveat";font-style:normal;font-weight:700;font-display:swap;src:url(/fonts/caveat-700-f4ee4fbd.woff2) format("woff2")}}
+</style>
 <style>{STYLE}</style>
 </head>
 <body>
@@ -264,11 +296,11 @@ def page(slug: str, title: str, summary: str, body: str) -> str:
 </div></div>
 <header class="top"><div class="wrap">
   <div class="brand-block">
-    <a class="brand" href="/"><img src="/img/wbwriter-mark.png" alt="">WBWriter</a>
+    <a class="brand" href="/"><img src="/img/wbwriter-mark-68-9c17d8d8.webp" alt="" width="34" height="34">WBWriter</a>
     <a class="byline" href="https://4h1m.com/" aria-label="Open-source tool by 4H1M Production">
       <span>Open-source tool by</span>
-      <img class="logo-on-dark" src="/img/4h1m-logo-white.png" alt="4H1M Production" width="36" height="36">
-      <img class="logo-on-light" src="/img/4h1m-logo.png" alt="4H1M Production" width="36" height="36">
+      <img class="logo-on-dark" src="/img/4h1m-white-72-5bca41ed.webp" alt="4H1M Production" width="36" height="36">
+      <img class="logo-on-light" src="/img/4h1m-black-72-fc75611a.webp" alt="4H1M Production" width="36" height="36">
     </a>
   </div>
   <nav class="nav" aria-label="Docs">{nav}<a class="btn" href="https://github.com/4H1Mzs/wbwriter/releases/latest">Download</a></nav>

@@ -27,9 +27,15 @@
 <meta name="twitter:description" content="Answers to common questions about WBWriter, the free, open-source stage whiteboard for macOS with NDI® and HDMI output.">
 <meta name="twitter:image" content="https://wbwriter.app/og-9eab99cf.png">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "WBWriter FAQ and troubleshooting", "description": "Answers to common questions about WBWriter, the free, open-source stage whiteboard for macOS with NDI® and HDMI output.", "url": "https://wbwriter.app/docs/faq", "inLanguage": "en", "image": "https://wbwriter.app/og-9eab99cf.png", "about": {"@type": "SoftwareApplication", "name": "WBWriter", "url": "https://wbwriter.app/"}, "publisher": {"@type": "Organization", "name": "4H1M, z.s.", "url": "https://4h1m.com/"}}</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112,700;112,800&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="preload" href="/fonts/archivo-var-ad517450.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/plex-sans-var-676a1a97.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:"Archivo";font-style:normal;font-weight:500 800;font-stretch:112% 125%;font-display:swap;src:url(/fonts/archivo-var-ad517450.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-style:normal;font-weight:400 600;font-display:swap;src:url(/fonts/plex-sans-var-676a1a97.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/plex-mono-400-0f395b10.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:500;font-display:swap;src:url(/fonts/plex-mono-500-a521013b.woff2) format("woff2")}
+@font-face{font-family:"Caveat";font-style:normal;font-weight:700;font-display:swap;src:url(/fonts/caveat-700-f4ee4fbd.woff2) format("woff2")}
+</style>
 <style>
 :root {
   --bg: #0d0a12; --surface: #16111d; --line: #2a2233; --fg: #f2eef8; --muted: #a59bb3;
@@ -110,11 +116,11 @@ footer .wrap { display: flex; justify-content: space-between; gap: 12px 24px; fl
 </div></div>
 <header class="top"><div class="wrap">
   <div class="brand-block">
-    <a class="brand" href="/"><img src="/img/wbwriter-mark.png" alt="">WBWriter</a>
+    <a class="brand" href="/"><img src="/img/wbwriter-mark-68-9c17d8d8.webp" alt="" width="34" height="34">WBWriter</a>
     <a class="byline" href="https://4h1m.com/" aria-label="Open-source tool by 4H1M Production">
       <span>Open-source tool by</span>
-      <img class="logo-on-dark" src="/img/4h1m-logo-white.png" alt="4H1M Production" width="36" height="36">
-      <img class="logo-on-light" src="/img/4h1m-logo.png" alt="4H1M Production" width="36" height="36">
+      <img class="logo-on-dark" src="/img/4h1m-white-72-5bca41ed.webp" alt="4H1M Production" width="36" height="36">
+      <img class="logo-on-light" src="/img/4h1m-black-72-fc75611a.webp" alt="4H1M Production" width="36" height="36">
     </a>
   </div>
   <nav class="nav" aria-label="Docs"><a href="/docs/quick-start">Quick start</a><a href="/docs/faq" aria-current="page">FAQ</a><a class="btn" href="https://github.com/4H1Mzs/wbwriter/releases/latest">Download</a></nav>
@@ -134,7 +140,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 12px 24px; fl
 <p>Yes. Set <strong>Background</strong> to <em>Transparent</em>. WBWriter then sends BGRA with straight alpha, so the receiver can key out everything except the writing.</p>
 <h2 id="what-does-the-performer-see-compared-with-the-audience"><a class="anchor" href="#what-does-the-performer-see-compared-with-the-audience">What does the performer see compared with the audience?</a></h2>
 <p>The board on the touchscreen has exactly the aspect ratio of the output. Everything inside the board is sent pixel for pixel. The hatched area, border, clear button and status line stay on the touchscreen only.</p>
-<figure><img src="/img/board-live-3bd3d179.webp" alt="The touchscreen in live mode. Only the inside of the board is sent to the LED wall." loading="lazy"><figcaption>The touchscreen in live mode. Only the inside of the board is sent to the LED wall.</figcaption></figure>
+<figure><img src="/img/board-live-3bd3d179.webp" alt="The touchscreen in live mode. Only the inside of the board is sent to the LED wall." width="1400" height="909" loading="lazy" decoding="async"><figcaption>The touchscreen in live mode. Only the inside of the board is sent to the LED wall.</figcaption></figure>
 <h2 id="can-i-prevent-someone-from-clearing-the-board-by-accident"><a class="anchor" href="#can-i-prevent-someone-from-clearing-the-board-by-accident">Can I prevent someone from clearing the board by accident?</a></h2>
 <p>Set <strong>Clear gesture</strong> to <em>Double tap</em>, or to <em>None</em> to hide the button entirely. An operator can still clear the board with Backspace on a keyboard.</p>
 <h2 id="can-i-change-the-pen-during-the-show"><a class="anchor" href="#can-i-change-the-pen-during-the-show">Can I change the pen during the show?</a></h2>
