@@ -7,6 +7,7 @@
 - Source code: https://github.com/4H1Mzs/wbwriter
 - Current version: 1.1.0
 - Price: free
+- License: MIT (open source)
 - Support: simon@4h1m.com
 - Made by: [4H1M, z.s.](https://4h1m.com/), a Czech nonprofit audiovisual production
 
@@ -47,7 +48,7 @@ Touchscreen (MacBook with a touch display) → WBWriter (renders at the wall's r
 
 ## Open source
 
-WBWriter is open source. The code, issues, roadmap and releases are public on GitHub: https://github.com/4H1Mzs/wbwriter. It's written in Swift with AppKit. Every tagged version is built, signed and notarized automatically. Bug reports, ideas and pull requests are welcome.
+WBWriter is open source under the MIT License. The code, issues, roadmap and releases are public on GitHub: https://github.com/4H1Mzs/wbwriter. It's written in Swift with AppKit. Every tagged version is built, signed and notarized automatically. Bug reports, ideas and pull requests are welcome.
 
 Build from source:
 

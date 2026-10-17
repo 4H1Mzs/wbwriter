@@ -4,7 +4,7 @@
 
 ## Is WBWriter free?
 
-Yes. WBWriter is free and open source. It's made by 4H1M, z.s., a Czech nonprofit. If it helps your show, you can support 4H1M at https://www.darujme.cz/4h1m.
+Yes. WBWriter is free and open source under the MIT License. It's made by 4H1M, z.s., a Czech nonprofit. If it helps your show, you can support 4H1M at https://www.darujme.cz/4h1m.
 
 ## Which platforms are supported?
 

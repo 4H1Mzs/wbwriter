@@ -23,6 +23,7 @@
   <img alt="macOS 13+" src="https://img.shields.io/badge/macOS-13%2B-2A0F4A?logo=apple&logoColor=white">
   <img alt="Universal" src="https://img.shields.io/badge/Apple%20Silicon%20%2B%20Intel-universal-4B1C7A">
   <img alt="Notarized" src="https://img.shields.io/badge/signed%20%26%20notarized-Apple-2A0F4A">
+  <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-4B1C7A"></a>
   <img alt="NDI 6.3" src="https://img.shields.io/badge/NDI%C2%AE-6.3-4B1C7A">
 </p>
 
@@ -186,6 +187,12 @@ If WBWriter helps your show, please consider supporting 4H1M's development and m
 <p align="center">
   <a href="https://4h1m.com/">4h1m.com</a> · <a href="https://www.instagram.com/4h1m.production/">Instagram @4h1m.production</a> · <a href="mailto:simon@4h1m.com">simon@4h1m.com</a>
 </p>
+
+## License
+
+WBWriter is open source under the [MIT License](LICENSE). © 2026 4H1M, z.s.
+
+The NDI® SDK headers in `Sources/CNDI/` come from Vizrt NDI AB under the NDI SDK license and aren't covered by the MIT License.
 
 ## Credits
 
