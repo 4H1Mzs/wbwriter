@@ -30,6 +30,7 @@ All settings are in the setup window and are saved between launches.
 | Corner logo | A small, faint logo in the bottom-right corner of the touchscreen: 4H1M, your own image, or none. It's never sent to the outputs. |
 | Hide mouse cursor | Hides the pointer while live. |
 | HDMI output | An external display for a clean full-screen feed, or *None*. |
+| Web control | Off by default. When on, it shows the address to open on a phone, with an optional port and PIN. |
 
 ## Go live
 
@@ -52,6 +53,15 @@ A small status line sits outside the board, near the bottom of the touchscreen. 
 | `… rx` | Number of connected NDI receivers. |
 | `TX … Mb/s` | Total outgoing traffic on the Mac's Ethernet and Wi-Fi interfaces. |
 | `Battery …%` | Shown only on battery power. Turns red at 20% or below. |
+
+## Control it from a phone
+
+Turn on **Web control** in the setup window and open one of the addresses it shows (for example `http://Stage-Mac.local:8080`) on a phone or laptop on the same network.
+
+- **Clear board:** tap twice to confirm.
+- **Message to the performer:** shown in yellow in the hatched area of the touchscreen, never on NDI or HDMI. It stays until you tap **Remove message**, or disappears after 10 seconds, 30 seconds or a minute.
+
+The actions work only while WBWriter is live. Set a PIN if other people share the network. If the macOS firewall is on, allow incoming connections for WBWriter when asked.
 
 ## Receive the feed
 

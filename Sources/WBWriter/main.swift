@@ -1,4 +1,5 @@
 import AppKit
+import Combine
 import SwiftUI
 
 final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
@@ -8,12 +9,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     private var canvas: Canvas?
     private var aboutWindow: NSWindow?
     private let updater = Updater()
+    private let webControl = WebControlServer()
+    private var observers: Set<AnyCancellable> = []
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NDI.requestNetworkAccess()
         buildMenu()
         showSetup()
         updater.canPresent = { [weak self] in self?.production == nil }
+        configureWebControl()
         let selfTest = CommandLine.arguments.contains("--selftest")
         if selfTest { runSelfTest() }
         if CommandLine.arguments.contains("--about") { showAbout() }
@@ -22,6 +26,45 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
                 self?.updater.check(userInitiated: false)
             }
         }
+    }
+
+    // MARK: Web control
+
+    private func configureWebControl() {
+        webControl.onClear = { [weak self] in
+            guard let production = self?.production else { return false }
+            production.clear()
+            return true
+        }
+        webControl.onMessage = { [weak self] text, seconds in
+            guard let production = self?.production else { return false }
+            production.showMessage(text, seconds: seconds)
+            return true
+        }
+        webControl.onClearMessage = { [weak self] in
+            guard let production = self?.production else { return false }
+            production.clearMessage()
+            return true
+        }
+        webControl.state = { [weak self] in
+            WebControlServer.State(live: self?.production != nil,
+                                   message: self?.production?.message,
+                                   ndi: self?.production?.statusText)
+        }
+        webControl.onFailure = { [weak self] message in self?.settings.webControlStatus = message }
+        Publishers.CombineLatest3(settings.$webControlEnabled, settings.$webControlPort, settings.$webControlPIN)
+            .debounce(for: .milliseconds(400), scheduler: RunLoop.main)
+            .sink { [weak self] enabled, port, pin in self?.applyWebControl(enabled: enabled, port: port, pin: pin) }
+            .store(in: &observers)
+    }
+
+    private func applyWebControl(enabled: Bool, port: Int, pin: String) {
+        guard enabled else {
+            webControl.stop()
+            settings.webControlStatus = nil
+            return
+        }
+        settings.webControlStatus = webControl.start(port: UInt16(clamping: port), pin: pin) ?? "Running"
     }
 
     @objc func checkForUpdates() {
@@ -53,6 +96,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     }
 
     func applicationWillTerminate(_ notification: Notification) {
+        webControl.stop()
         production?.stop()
     }
 

@@ -45,6 +45,7 @@ WBWriter is a stripped-down, show-safe take on [OpenBoard](https://openboard.ch/
 - 📡 **Clean NDI® output.** The stream is the board content only, with no UI and no border, at the exact output resolution. The background is **black** (BGRX) or **transparent** (BGRA with straight alpha, for keying). The source name and frame rate are configurable, from 23.976 to 60 fps.
 - 🖥️ **Optional HDMI program feed.** A full-screen clean feed can run on any external display.
 - 📊 **Status line.** It sits outside the board in a bottom corner of the touchscreen. It goes below the board when there's room, or into the margin beside it and wraps onto several lines. It's never sent to the outputs. It shows NDI health, measured fps, receiver count, network TX, source name, resolution, and battery when running on battery.
+- 📱 **Optional web control.** From a phone on the same network, clear the board or show the performer a message in the hatched area, until you remove it or for a set time. Messages never reach the outputs. A PIN can protect it.
 - 🔄 **Built-in updates.** At launch, WBWriter offers new versions from GitHub with their changelog, and installs them only when they're signed by 4H1M. It never interrupts a live show.
 - 🛡️ **Show-safe.** While live, the Dock and menu bar are hidden and sleep is turned off. **Esc** goes back to setup.
 
@@ -86,6 +87,7 @@ Open the `.dmg` and drag **WBWriter** into **Applications**.
    | Clear gesture / button | Single tap, double tap, or none (no button), and which corner. |
    | Corner logo | A small, faint logo in the bottom-right corner of the touchscreen: 4H1M, your own image, or none. |
    | HDMI output | An external display for a clean feed, or *None*. |
+   | Web control | Off by default. When on, it shows the address to open on a phone, with an optional port and PIN. |
 3. Click **Go Live** (or press Return).
 4. Write. To leave live mode, press **Esc**. **Backspace** also clears the board, for an operator at a keyboard.
 
@@ -100,6 +102,15 @@ Settings are saved between launches.
 | 🔴 `NDI DROPPING` | Sending below 90% of the target frame rate. |
 | `TX … Mb/s` | Total outgoing traffic on the Mac's Ethernet and Wi-Fi interfaces. |
 | `Battery …%` | Shown only when running on battery. It turns red at 20% or below. |
+
+## Web control
+
+Turn on **Web control** in the setup window, then open one of the addresses it shows (for example `http://Stage-Mac.local:8080`) on a phone or laptop on the same network. From that page you can:
+
+- **Clear board.** Tap twice to confirm.
+- **Message to the performer.** It appears in yellow in the hatched area on the touchscreen and stays until you tap **Remove message**, or disappears after 10 seconds, 30 seconds or a minute. It's never sent to NDI or HDMI.
+
+The actions only work while WBWriter is live. If other people share the network, set a PIN. The page asks for it once and remembers it. If the macOS firewall is on, allow incoming connections for WBWriter when asked.
 
 ## Receiving the feed
 

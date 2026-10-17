@@ -41,11 +41,11 @@ enum SystemStatus {
 }
 
 /// Small, non-interactive status text shown around the board (never sent to outputs).
-final class StatusLabel: NSTextField {
+class StatusLabel: NSTextField {
     convenience init() {
         self.init(wrappingLabelWithString: "")
         font = .monospacedSystemFont(ofSize: 13, weight: .medium)
-        textColor = NSColor(white: 1, alpha: 0.55)
+        textColor = NSColor(white: 1, alpha: 0.4)
         lineBreakMode = .byWordWrapping
         maximumNumberOfLines = 0
         isSelectable = false
@@ -59,6 +59,16 @@ final class StatusLabel: NSTextField {
     }
 
     override func hitTest(_ point: NSPoint) -> NSView? { nil }
+}
+
+/// A remote message for the performer, shown in the hatched area. Never sent to the outputs.
+final class MessageLabel: StatusLabel {
+    convenience init(text: String) {
+        self.init()
+        font = .systemFont(ofSize: 28, weight: .semibold)
+        textColor = NSColor(srgbRed: 1, green: 0.83, blue: 0.35, alpha: 1)
+        stringValue = text
+    }
 }
 
 /// Builds the status line once per second.
@@ -88,7 +98,7 @@ final class StatusMonitor {
         lastBytes = bytes
 
         let font = NSFont.monospacedSystemFont(ofSize: 13, weight: .medium)
-        let dim = NSColor(white: 1, alpha: 0.55)
+        let dim = NSColor(white: 1, alpha: 0.4)
         let out = NSMutableAttributedString()
         func add(_ s: String, _ color: NSColor = dim) {
             out.append(NSAttributedString(string: s, attributes: [.font: font, .foregroundColor: color]))

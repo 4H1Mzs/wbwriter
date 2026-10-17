@@ -25,6 +25,10 @@ final class ProductionController {
     private var statusTimer: Timer?
     private var clearButton: ClearButton?
     private var cornerLogo: CornerLogoView?
+    private var messageLabel: MessageLabel?
+    private var messageTimer: Timer?
+    /// The remote message currently on the touchscreen, if any.
+    private(set) var message: String?
 
     init(canvas: Canvas, settings: AppSettings, onExit: @escaping () -> Void) {
         self.canvas = canvas
@@ -100,10 +104,7 @@ final class ProductionController {
         statusLabel = label
         statusMonitor = StatusMonitor(width: canvas.width, height: canvas.height, frameRate: settings.frameRate,
                                       sender: sender, ndiEnabled: settings.ndiEnabled)
-        board.onLayout = { [weak self] in
-            self?.placeCornerLogo()
-            self?.placeStatus()
-        }
+        board.onLayout = { [weak self] in self?.layoutOverlays() }
 
         window.contentView = container
         window.onEscape = { [weak self] in self?.exit() }
@@ -154,6 +155,45 @@ final class ProductionController {
         placeStatus()
     }
 
+    /// The latest status line as plain text, for the web control page.
+    var statusText: String? {
+        statusLabel?.stringValue.replacingOccurrences(of: "\u{2060}", with: "").replacingOccurrences(of: "\u{00A0}", with: " ")
+    }
+
+    private func layoutOverlays() {
+        placeCornerLogo()
+        if let messageLabel { place(messageLabel, avoiding: []) }
+        placeStatus()
+    }
+
+    // MARK: Remote message
+
+    /// Shows a message for the performer in the hatched area until it's removed,
+    /// or for `seconds` when given.
+    func showMessage(_ text: String, seconds: Double?) {
+        clearMessage()
+        guard let container = boardView?.superview else { return }
+        let label = MessageLabel(text: text)
+        container.addSubview(label)
+        messageLabel = label
+        message = text
+        layoutOverlays()
+        if let seconds {
+            let t = Timer(timeInterval: seconds, repeats: false) { [weak self] _ in self?.clearMessage() }
+            RunLoop.main.add(t, forMode: .common)
+            messageTimer = t
+        }
+    }
+
+    func clearMessage() {
+        messageTimer?.invalidate()
+        messageTimer = nil
+        messageLabel?.removeFromSuperview()
+        messageLabel = nil
+        message = nil
+        placeStatus()
+    }
+
     /// Bottom-right corner of the screen. When the clear button sits there, the logo goes just above
     /// it, or beside it if the board leaves no room above. Shrinks to stay off the board and the
     /// button, and hides when even a small logo wouldn't fit.
@@ -184,15 +224,21 @@ final class ProductionController {
         logo.isHidden = true
     }
 
-    /// Keeps the status line visible outside the board: below it on one line if it fits, otherwise
-    /// wrapped onto more lines in the free margin beside the board. As a last resort it sits at the
-    /// bottom of the screen even if it touches the board edge.
     private func placeStatus() {
-        guard let label = statusLabel, let board = boardView, let container = label.superview else { return }
+        guard let label = statusLabel else { return }
+        let message = messageLabel.flatMap { $0.isHidden ? nil : $0.frame }
+        place(label, avoiding: [message].compactMap { $0 })
+    }
+
+    /// Keeps a label visible outside the board: below it on one line if it fits, otherwise
+    /// wrapped onto more lines in the free margin beside the board. As a last resort it sits at
+    /// the bottom of the screen even if it touches the board edge.
+    private func place(_ label: StatusLabel, avoiding extra: [CGRect]) {
+        guard let board = boardView, let container = label.superview else { return }
         let b = container.bounds
         let r = board.framedBoardRect
         let logoFrame = cornerLogo.flatMap { $0.isHidden ? nil : $0.frame }
-        let blocked = [r, clearButton?.frame, logoFrame].compactMap { $0 }
+        let blocked = [r, clearButton?.frame, logoFrame].compactMap { $0 } + extra
         let mx: CGFloat = 12, my: CGFloat = 6
 
         func fits(_ spot: CGRect) -> Bool {
@@ -214,9 +260,14 @@ final class ProductionController {
             guard area.width >= 140, area.height >= 14 else { continue }
             let size = label.wrappedSize(maxWidth: area.width)
             guard size.height <= area.height else { continue }
-            let left = CGRect(x: area.minX, y: area.minY, width: size.width, height: size.height)
-            let right = CGRect(x: area.maxX - size.width, y: area.minY, width: size.width, height: size.height)
-            if let spot = [left, right].first(where: fits) { return show(spot) }
+            // Try the bottom of the area first, then move up past anything already placed there.
+            var y = area.minY
+            while y + size.height <= area.maxY {
+                let left = CGRect(x: area.minX, y: y, width: size.width, height: size.height)
+                let right = CGRect(x: area.maxX - size.width, y: y, width: size.width, height: size.height)
+                if let spot = [left, right].first(where: fits) { return show(spot) }
+                y += 8
+            }
         }
 
         let size = label.wrappedSize(maxWidth: b.width - 2 * mx)
@@ -258,6 +309,10 @@ final class ProductionController {
         statusLabel = nil
         clearButton = nil
         cornerLogo = nil
+        messageTimer?.invalidate()
+        messageTimer = nil
+        messageLabel = nil
+        message = nil
         sender?.stop()
         sender = nil
         boardWindow?.orderOut(nil)

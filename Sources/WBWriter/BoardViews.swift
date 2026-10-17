@@ -1,4 +1,5 @@
 import AppKit
+import CoreImage
 import QuartzCore
 
 /// Largest rect of `size`'s aspect ratio centred in `container`.
@@ -60,7 +61,7 @@ final class BoardView: NSView {
         layer?.backgroundColor = Self.hatchPattern().cgColor
 
         frameLayer.backgroundColor = NSColor.black.cgColor
-        frameLayer.borderColor = NSColor(white: 1, alpha: 0.6).cgColor
+        frameLayer.borderColor = NSColor(white: 1, alpha: 0.32).cgColor
         frameLayer.borderWidth = borderWidth
         contentLayer.contentsGravity = .resize
         contentLayer.magnificationFilter = .linear
@@ -75,7 +76,7 @@ final class BoardView: NSView {
     private static func hatchPattern() -> NSColor {
         let tile: CGFloat = 32
         let image = NSImage(size: NSSize(width: tile, height: tile), flipped: false) { rect in
-            NSColor(white: 0.06, alpha: 1).setFill()
+            NSColor(white: 0.05, alpha: 1).setFill()
             rect.fill()
             let path = NSBezierPath()
             // Two segments so the stripes join seamlessly across tiles.
@@ -84,7 +85,7 @@ final class BoardView: NSView {
             path.move(to: NSPoint(x: -o, y: tile + o)); path.line(to: NSPoint(x: tile + o, y: -o))
             path.move(to: NSPoint(x: tile - o, y: tile + o)); path.line(to: NSPoint(x: tile + o, y: tile - o))
             path.lineWidth = 9
-            NSColor(white: 1, alpha: 0.03).setStroke()
+            NSColor(white: 1, alpha: 0.012).setStroke()
             path.stroke()
             return true
         }
@@ -261,9 +262,25 @@ final class CornerLogoView: NSImageView {
 
     convenience init(image: NSImage) {
         self.init(frame: .zero)
-        self.image = image
+        self.image = Self.muted(image)
         imageScaling = .scaleProportionallyUpOrDown
-        alphaValue = 0.2
+        alphaValue = 0.14
+    }
+
+    /// Grey, slightly darkened version of any logo, so even a colorful one stays in the background.
+    private static func muted(_ image: NSImage) -> NSImage {
+        guard let tiff = image.tiffRepresentation, let input = CIImage(data: tiff) else { return image }
+        let k: CGFloat = 0.65
+        let grey = input
+            .applyingFilter("CIColorControls", parameters: [kCIInputSaturationKey: 0])
+            .applyingFilter("CIColorMatrix", parameters: [
+                "inputRVector": CIVector(x: k, y: 0, z: 0, w: 0),
+                "inputGVector": CIVector(x: 0, y: k, z: 0, w: 0),
+                "inputBVector": CIVector(x: 0, y: 0, z: k, w: 0),
+            ])
+        let result = NSImage(size: image.size)
+        result.addRepresentation(NSCIImageRep(ciImage: grey))
+        return result
     }
 
     override func hitTest(_ point: NSPoint) -> NSView? { nil }

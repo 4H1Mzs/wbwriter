@@ -140,6 +140,34 @@ struct SetupView: View {
                         .font(.caption).foregroundStyle(.secondary)
                 }
 
+                Section {
+                    Toggle("Allow remote control from a browser", isOn: $settings.webControlEnabled)
+                    if settings.webControlEnabled {
+                        LabeledContent("Port") {
+                            TextField("Port", value: $settings.webControlPort, format: .number.grouping(.never))
+                                .frame(width: 90)
+                        }
+                        TextField("PIN (optional)", text: $settings.webControlPIN)
+                        ForEach(WebControlServer.addresses(port: UInt16(clamping: settings.webControlPort)), id: \.self) { address in
+                            LabeledContent {
+                                Button("Open") { if let url = URL(string: address) { NSWorkspace.shared.open(url) } }
+                            } label: {
+                                Text(address).font(.system(.body, design: .monospaced)).textSelection(.enabled)
+                            }
+                        }
+                        if let status = settings.webControlStatus {
+                            Text(status)
+                                .font(.caption)
+                                .foregroundStyle(status == "Running" ? Color.secondary : Color.red)
+                        }
+                    }
+                } header: {
+                    Text("Web control")
+                } footer: {
+                    Text("Open an address above on a phone or laptop on the same network to clear the board or show the performer a message. Messages appear on the touchscreen only. Set a PIN if other people share the network.")
+                        .font(.caption).foregroundStyle(.secondary)
+                }
+
                 Section("Updates") {
                     Toggle("Check for updates when WBWriter starts", isOn: $settings.checkForUpdates)
                     LabeledContent("Version \(AppVersion.current)") {

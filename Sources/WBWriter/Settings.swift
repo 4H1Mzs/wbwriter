@@ -100,6 +100,11 @@ final class AppSettings: ObservableObject {
     @Published var clearGesture: ClearGesture { didSet { defaults.set(clearGesture.rawValue, forKey: "clearGesture") } }
     @Published var hideCursor: Bool { didSet { defaults.set(hideCursor, forKey: "hideCursor") } }
     @Published var cornerLogo: CornerLogo { didSet { defaults.set(cornerLogo.rawValue, forKey: "cornerLogo") } }
+    @Published var webControlEnabled: Bool { didSet { defaults.set(webControlEnabled, forKey: "webControlEnabled") } }
+    @Published var webControlPort: Int { didSet { defaults.set(webControlPort, forKey: "webControlPort") } }
+    @Published var webControlPIN: String { didSet { defaults.set(webControlPIN, forKey: "webControlPIN") } }
+    /// Status of the web control server, shown in setup (not persisted).
+    @Published var webControlStatus: String?
     @Published var checkForUpdates: Bool { didSet { defaults.set(checkForUpdates, forKey: "checkForUpdates") } }
     /// Last go-live failure, shown in the setup window (not persisted).
     @Published var errorMessage: String?
@@ -122,6 +127,9 @@ final class AppSettings: ObservableObject {
             "clearGesture": ClearGesture.singleTap.rawValue,
             "hideCursor": false,
             "checkForUpdates": true,
+            "webControlEnabled": false,
+            "webControlPort": 8080,
+            "webControlPIN": "",
             "cornerLogo": CornerLogo.fourH1M.rawValue,
         ])
         outputWidth = d.integer(forKey: "outputWidth")
@@ -138,6 +146,9 @@ final class AppSettings: ObservableObject {
         clearGesture = ClearGesture(rawValue: d.string(forKey: "clearGesture") ?? "") ?? .singleTap
         hideCursor = d.bool(forKey: "hideCursor")
         checkForUpdates = d.bool(forKey: "checkForUpdates")
+        webControlEnabled = d.bool(forKey: "webControlEnabled")
+        webControlPort = d.integer(forKey: "webControlPort")
+        webControlPIN = d.string(forKey: "webControlPIN") ?? ""
         cornerLogo = CornerLogo(rawValue: d.string(forKey: "cornerLogo") ?? "") ?? .fourH1M
         if let c = d.array(forKey: "penColor") as? [Double], c.count == 3 {
             penColor = Color(.sRGB, red: c[0], green: c[1], blue: c[2])
