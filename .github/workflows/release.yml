@@ -52,8 +52,10 @@ jobs:
           export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
           VERSION="${RELEASE_TAG#v}"
           NOTES=".github/release-notes/$RELEASE_TAG.md"
-          shopt -s nullglob
-          ASSETS=(build/WBWrite-$VERSION.dmg build/WBWrite-$VERSION.zip build/WBWrite-$VERSION.pkg)
+          ASSETS=()
+          for f in build/WBWrite-$VERSION.dmg build/WBWrite-$VERSION.zip build/WBWrite-$VERSION.pkg; do
+            [[ -f "$f" ]] && ASSETS+=("$f")
+          done
           if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
             gh release upload "$RELEASE_TAG" "${ASSETS[@]}" --clobber
           else
