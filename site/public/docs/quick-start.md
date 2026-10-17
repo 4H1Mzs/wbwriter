@@ -40,7 +40,7 @@ Click **Go Live** or press Return. The board fills the touchscreen, and the Dock
 
 ## Read the status line
 
-A small status line sits in a bottom corner of the touchscreen, only where it fits outside the board. It's never sent to NDI or HDMI.
+A small status line sits outside the board, near the bottom of the touchscreen. When there isn't room below the board, it moves into the margin beside it and wraps onto several lines. It's never sent to NDI or HDMI.
 
 | Indicator | Meaning |
 |---|---|

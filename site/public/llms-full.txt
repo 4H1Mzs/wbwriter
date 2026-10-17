@@ -5,7 +5,7 @@
 - Website: https://wbwriter.app/
 - Download (macOS 13+, Apple Silicon and Intel, signed and notarized): https://github.com/4H1Mzs/wbwriter/releases/latest
 - Source code: https://github.com/4H1Mzs/wbwriter
-- Current version: 1.1.0
+- Current version: 1.1.1
 - Price: free
 - License: MIT (open source)
 - Support: simon@4h1m.com
@@ -118,7 +118,7 @@ Click **Go Live** or press Return. The board fills the touchscreen, and the Dock
 
 ## Read the status line
 
-A small status line sits in a bottom corner of the touchscreen, only where it fits outside the board. It's never sent to NDI or HDMI.
+A small status line sits outside the board, near the bottom of the touchscreen. When there isn't room below the board, it moves into the margin beside it and wraps onto several lines. It's never sent to NDI or HDMI.
 
 | Indicator | Meaning |
 |---|---|

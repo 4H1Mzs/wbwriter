@@ -5,7 +5,7 @@
 - Website: https://wbwriter.app/
 - Download (macOS 13+, Apple Silicon and Intel, signed and notarized): https://github.com/4H1Mzs/wbwriter/releases/latest
 - Source code: https://github.com/4H1Mzs/wbwriter
-- Current version: 1.1.0
+- Current version: 1.1.1
 - Price: free
 - License: MIT (open source)
 - Support: simon@4h1m.com

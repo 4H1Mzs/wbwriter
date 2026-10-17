@@ -144,24 +144,58 @@ final class ProductionController {
         placeStatus()
     }
 
-    /// Puts the status line in a bottom corner, but only where it fits outside the board and button.
+    /// Keeps the status line visible outside the board: below it on one line if it fits, otherwise
+    /// wrapped onto more lines in the free margin beside the board. As a last resort it sits at the
+    /// bottom of the screen even if it touches the board edge.
     private func placeStatus() {
         guard let label = statusLabel, let board = boardView, let container = label.superview else { return }
-        label.sizeToFit()
-        let size = label.frame.size
-        let m: CGFloat = 12
-        let bottom: CGFloat = 6
-        let candidates = [
-            CGRect(x: m, y: bottom, width: size.width, height: size.height),
-            CGRect(x: container.bounds.width - size.width - m, y: bottom, width: size.width, height: size.height),
-        ]
-        let blocked = [board.framedBoardRect, clearButton?.frame].compactMap { $0 }
-        if let spot = candidates.first(where: { c in blocked.allSatisfy { !$0.intersects(c.insetBy(dx: -4, dy: -4)) } }) {
-            label.frame = spot
-            label.isHidden = false
-        } else {
-            label.isHidden = true
+        let b = container.bounds
+        let r = board.framedBoardRect
+        let blocked = [r, clearButton?.frame].compactMap { $0 }
+        let mx: CGFloat = 12, my: CGFloat = 6
+
+        func fits(_ spot: CGRect) -> Bool {
+            b.contains(spot) && blocked.allSatisfy { !$0.intersects(spot.insetBy(dx: -4, dy: -4)) }
         }
+        func show(_ spot: CGRect) {
+            label.frame = spot.integral
+            label.isHidden = false
+        }
+
+        // Free areas around the board, bottom-anchored: below it, then the left and right margins.
+        let regions = [
+            CGRect(x: b.minX, y: b.minY, width: b.width, height: r.minY - b.minY),
+            CGRect(x: b.minX, y: b.minY, width: r.minX - b.minX, height: b.height),
+            CGRect(x: r.maxX, y: b.minY, width: b.maxX - r.maxX, height: b.height),
+        ]
+        for region in regions {
+            let area = region.insetBy(dx: mx, dy: my)
+            guard area.width >= 140, area.height >= 14 else { continue }
+            let size = label.wrappedSize(maxWidth: area.width)
+            guard size.height <= area.height else { continue }
+            let left = CGRect(x: area.minX, y: area.minY, width: size.width, height: size.height)
+            let right = CGRect(x: area.maxX - size.width, y: area.minY, width: size.width, height: size.height)
+            if let spot = [left, right].first(where: fits) { return show(spot) }
+        }
+
+        let size = label.wrappedSize(maxWidth: b.width - 2 * mx)
+        show(CGRect(x: b.minX + mx, y: b.minY + my, width: size.width, height: size.height))
+    }
+
+    /// Renders the board screen (board, button, status line) to a PNG, for testing without a display.
+    func saveBoardSnapshot(to url: URL) {
+        guard let view = boardWindow?.contentView, let layer = view.layer else { return }
+        let scale = boardWindow?.backingScaleFactor ?? 2
+        let size = view.bounds.size
+        guard let ctx = CGContext(data: nil, width: Int(size.width * scale), height: Int(size.height * scale),
+                                  bitsPerComponent: 8, bytesPerRow: 0, space: CGColorSpace(name: CGColorSpace.sRGB)!,
+                                  bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else { return }
+        ctx.scaleBy(x: scale, y: scale)
+        layer.render(in: ctx)
+        guard let image = ctx.makeImage(),
+              let dest = CGImageDestinationCreateWithURL(url as CFURL, "public.png" as CFString, 1, nil) else { return }
+        CGImageDestinationAddImage(dest, image, nil)
+        CGImageDestinationFinalize(dest)
     }
 
     func clear() {

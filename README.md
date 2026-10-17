@@ -44,7 +44,7 @@ WBWriter is a stripped-down, show-safe take on [OpenBoard](https://openboard.ch/
 - 🧽 **One clear button.** It's large enough to hit with a finger but stays out of the way, in a corner you choose. It can be single tap, double tap (safer), or turned off completely.
 - 📡 **Clean NDI® output.** The stream is the board content only, with no UI and no border, at the exact output resolution. The background is **black** (BGRX) or **transparent** (BGRA with straight alpha, for keying). The source name and frame rate are configurable, from 23.976 to 60 fps.
 - 🖥️ **Optional HDMI program feed.** A full-screen clean feed can run on any external display.
-- 📊 **Status line.** It sits in a bottom corner of the touchscreen, only where it fits outside the board, and is never sent to the outputs. It shows NDI health, measured fps, receiver count, network TX, source name, resolution, and battery when running on battery.
+- 📊 **Status line.** It sits outside the board in a bottom corner of the touchscreen. It goes below the board when there's room, or into the margin beside it and wraps onto several lines. It's never sent to the outputs. It shows NDI health, measured fps, receiver count, network TX, source name, resolution, and battery when running on battery.
 - 🛡️ **Show-safe.** While live, the Dock and menu bar are hidden and sleep is turned off. **Esc** goes back to setup.
 
 <p align="center">

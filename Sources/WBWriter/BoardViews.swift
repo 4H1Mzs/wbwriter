@@ -184,6 +184,9 @@ final class ClearButton: NSView {
     private var pressed = false { didSet { needsDisplay = true } }
     private var armed = false { didSet { needsDisplay = true } }
     private var disarmWork: DispatchWorkItem?
+    /// Where the current press started; nil once the finger has moved too far to count as a tap.
+    private var pressOrigin: NSPoint?
+    private static let tapSlop: CGFloat = 10
     private let icon: NSImage?
 
     init(requiresDoubleTap: Bool) {
@@ -215,11 +218,25 @@ final class ClearButton: NSView {
         }
     }
 
-    override func mouseDown(with event: NSEvent) { pressed = true }
+    override func mouseDown(with event: NSEvent) {
+        pressed = true
+        pressOrigin = convert(event.locationInWindow, from: nil)
+    }
+
+    // A swipe across the button is not a tap: cancel once the finger moves.
+    override func mouseDragged(with event: NSEvent) {
+        guard let origin = pressOrigin else { return }
+        let p = convert(event.locationInWindow, from: nil)
+        if hypot(p.x - origin.x, p.y - origin.y) > Self.tapSlop {
+            pressOrigin = nil
+            pressed = false
+        }
+    }
 
     override func mouseUp(with event: NSEvent) {
         pressed = false
-        guard bounds.contains(convert(event.locationInWindow, from: nil)) else { return }
+        defer { pressOrigin = nil }
+        guard pressOrigin != nil, bounds.contains(convert(event.locationInWindow, from: nil)) else { return }
         if !requiresDoubleTap || armed {
             disarm()
             action?()

@@ -43,11 +43,19 @@ enum SystemStatus {
 /// Small, non-interactive status text shown around the board (never sent to outputs).
 final class StatusLabel: NSTextField {
     convenience init() {
-        self.init(labelWithString: "")
+        self.init(wrappingLabelWithString: "")
         font = .monospacedSystemFont(ofSize: 13, weight: .medium)
         textColor = NSColor(white: 1, alpha: 0.55)
-        lineBreakMode = .byClipping
-        maximumNumberOfLines = 1
+        lineBreakMode = .byWordWrapping
+        maximumNumberOfLines = 0
+        isSelectable = false
+    }
+
+    /// Size of the text when wrapped to at most `maxWidth` points.
+    func wrappedSize(maxWidth: CGFloat) -> NSSize {
+        preferredMaxLayoutWidth = maxWidth
+        let size = cell?.cellSize(forBounds: NSRect(x: 0, y: 0, width: maxWidth, height: .greatestFiniteMagnitude)) ?? .zero
+        return NSSize(width: ceil(min(size.width, maxWidth)), height: ceil(size.height))
     }
 
     override func hitTest(_ point: NSPoint) -> NSView? { nil }
@@ -85,6 +93,10 @@ final class StatusMonitor {
         func add(_ s: String, _ color: NSColor = dim) {
             out.append(NSAttributedString(string: s, attributes: [.font: font, .foregroundColor: color]))
         }
+        /// An item that never breaks across lines.
+        func item(_ s: String, _ color: NSColor = dim) {
+            add(s.replacingOccurrences(of: " ", with: "\u{00A0}").replacingOccurrences(of: "-", with: "-\u{2060}"), color)
+        }
         let sep = "  ·  "
 
         if ndiEnabled, let sender {
@@ -97,19 +109,20 @@ final class StatusMonitor {
                 !healthy ? (.systemRed, "NDI DROPPING")
                 : receivers > 0 ? (.systemGreen, "NDI OK")
                 : (.systemYellow, "NDI waiting")
-            add("● ", dot.withAlphaComponent(0.9))
-            add(state)
-            add(sep + sender.sourceName)
-            add(sep + "\(resolution) @ " + String(format: "%.2f fps", fps))
-            add(sep + "\(receivers) rx")
-            add(sep + String(format: "TX %.1f Mb/s", mbps))
+            item("● ", dot.withAlphaComponent(0.9))
+            item(state)
+            add(sep); item(sender.sourceName)
+            add(sep); item("\(resolution) @ " + String(format: "%.2f fps", fps))
+            add(sep); item("\(receivers) rx")
+            add(sep); item(String(format: "TX %.1f Mb/s", mbps))
         } else {
-            add("● ", NSColor(white: 1, alpha: 0.3))
-            add("NDI off" + sep + resolution)
+            item("● ", NSColor(white: 1, alpha: 0.3))
+            item("NDI off")
+            add(sep); item(resolution)
         }
         if let battery = SystemStatus.batteryPercentIfOnBattery() {
             add(sep)
-            add("Battery \(battery)%", battery <= 20 ? .systemRed.withAlphaComponent(0.9) : dim)
+            item("Battery \(battery)%", battery <= 20 ? .systemRed.withAlphaComponent(0.9) : dim)
         }
         return out
     }

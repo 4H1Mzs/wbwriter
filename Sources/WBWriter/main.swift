@@ -27,6 +27,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
             canvas.continueStroke(to: CGPoint(x: w * (0.1 + 0.8 * t), y: h * (0.5 + 0.3 * sin(t * .pi * 4))))
         }
         canvas.endStroke(at: CGPoint(x: w * 0.9, y: h * 0.5))
+
+        // WBWRITER_SNAPSHOT=/path/board.png saves the live board screen once the status line has updated.
+        if let path = ProcessInfo.processInfo.environment["WBWRITER_SNAPSHOT"] {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) { [weak self] in
+                self?.production?.saveBoardSnapshot(to: URL(fileURLWithPath: path))
+            }
+        }
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
