@@ -1,0 +1,62 @@
+name: Release
+
+# Runs only on version tags or manual dispatch — never on pull requests, because
+# the job executes on a self-hosted Mac that holds the signing identity.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing version tag to build and publish (e.g. v1.0.0)
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.event.inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  macos:
+    name: macOS (signed + notarized)
+    # 4H1M org Mac: has the NDI SDK, Developer ID certificate and the
+    # "WBWrite" notarytool keychain profile.
+    runs-on: [self-hosted, macOS]
+    timeout-minutes: 60
+    env:
+      RELEASE_TAG: ${{ github.event.inputs.tag || github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+          fetch-depth: 0
+
+      - name: Build, sign and notarize
+        run: |
+          export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+          VERSION="${RELEASE_TAG#v}" NOTARY_PROFILE=WBWrite scripts/build.sh
+
+      - name: Verify
+        run: |
+          VERSION="${RELEASE_TAG#v}"
+          codesign --verify --deep --strict build/WBWrite.app
+          spctl --assess --type execute -vv build/WBWrite.app
+          xcrun stapler validate "build/WBWrite-$VERSION.dmg"
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+          VERSION="${RELEASE_TAG#v}"
+          NOTES=".github/release-notes/$RELEASE_TAG.md"
+          shopt -s nullglob
+          ASSETS=(build/WBWrite-$VERSION.dmg build/WBWrite-$VERSION.zip build/WBWrite-$VERSION.pkg)
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release upload "$RELEASE_TAG" "${ASSETS[@]}" --clobber
+          else
+            if [[ -f "$NOTES" ]]; then NOTE_ARGS=(--notes-file "$NOTES"); else NOTE_ARGS=(--generate-notes); fi
+            gh release create "$RELEASE_TAG" "${ASSETS[@]}" --title "WBWrite $VERSION" "${NOTE_ARGS[@]}" --latest
+          fi

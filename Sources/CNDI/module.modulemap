@@ -1,0 +1,5 @@
+module CNDI [system] {
+    header "shim.h"
+    link "ndi"
+    export *
+}
