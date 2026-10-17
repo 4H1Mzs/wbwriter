@@ -227,14 +227,18 @@ final class ProductionController {
     private func placeStatus() {
         guard let label = statusLabel else { return }
         let message = messageLabel.flatMap { $0.isHidden ? nil : $0.frame }
-        place(label, avoiding: [message].compactMap { $0 })
+        // A message for the performer matters more: if both don't fit, the status line steps aside.
+        if !place(label, avoiding: [message].compactMap { $0 }, overlapIfNeeded: message == nil) {
+            label.isHidden = true
+        }
     }
 
     /// Keeps a label visible outside the board: below it on one line if it fits, otherwise
     /// wrapped onto more lines in the free margin beside the board. As a last resort it sits at
     /// the bottom of the screen even if it touches the board edge.
-    private func place(_ label: StatusLabel, avoiding extra: [CGRect]) {
-        guard let board = boardView, let container = label.superview else { return }
+    @discardableResult
+    private func place(_ label: StatusLabel, avoiding extra: [CGRect], overlapIfNeeded: Bool = true) -> Bool {
+        guard let board = boardView, let container = label.superview else { return false }
         let b = container.bounds
         let r = board.framedBoardRect
         let logoFrame = cornerLogo.flatMap { $0.isHidden ? nil : $0.frame }
@@ -244,9 +248,10 @@ final class ProductionController {
         func fits(_ spot: CGRect) -> Bool {
             b.contains(spot) && blocked.allSatisfy { !$0.intersects(spot.insetBy(dx: -4, dy: -4)) }
         }
-        func show(_ spot: CGRect) {
+        func show(_ spot: CGRect) -> Bool {
             label.frame = spot.integral
             label.isHidden = false
+            return true
         }
 
         // Free areas around the board, bottom-anchored: below it, then the left and right margins.
@@ -270,8 +275,9 @@ final class ProductionController {
             }
         }
 
+        guard overlapIfNeeded else { return false }
         let size = label.wrappedSize(maxWidth: b.width - 2 * mx)
-        show(CGRect(x: b.minX + mx, y: b.minY + my, width: size.width, height: size.height))
+        return show(CGRect(x: b.minX + mx, y: b.minY + my, width: size.width, height: size.height))
     }
 
     /// Renders the board screen (board, button, status line) to a PNG, for testing without a display.

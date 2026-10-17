@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>WBWriter quick start · WBWriter</title>
+<meta name="description" content="How to install WBWriter on macOS, set it up for a show, and send the board to an LED wall over NDI® or HDMI.">
+<link rel="canonical" href="https://wbwriter.app/docs/quick-start">
+<link rel="alternate" type="text/markdown" href="/docs/quick-start.md" title="WBWriter quick start (Markdown)">
+<meta name="theme-color" content="#4b1c7a">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="WBWriter">
+<meta property="og:url" content="https://wbwriter.app/docs/quick-start">
+<meta property="og:title" content="WBWriter quick start">
+<meta property="og:description" content="How to install WBWriter on macOS, set it up for a show, and send the board to an LED wall over NDI® or HDMI.">
+<meta property="og:image" content="https://wbwriter.app/og-9eab99cf.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wbwriter.app/og-9eab99cf.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "WBWriter quick start", "description": "How to install WBWriter on macOS, set it up for a show, and send the board to an LED wall over NDI® or HDMI.", "url": "https://wbwriter.app/docs/quick-start", "inLanguage": "en", "image": "https://wbwriter.app/og-9eab99cf.png", "about": {"@type": "SoftwareApplication", "name": "WBWriter", "url": "https://wbwriter.app/"}, "publisher": {"@type": "Organization", "name": "4H1M, z.s.", "url": "https://4h1m.com/"}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112,700;112,800&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --bg: #0d0a12; --surface: #16111d; --line: #2a2233; --fg: #f2eef8; --muted: #a59bb3;
+  --accent: #b48cff; --brand: #4b1c7a; --brand-ink: #ffffff; --code-bg: #1d1626;
+  --font-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --gutter-l: max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r: max(16px, env(safe-area-inset-right, 0px));
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) { --bg: #f6f3fa; --surface: #ffffff; --line: #e1d9ea; --fg: #1a1024; --muted: #5e536c; --accent: #4b1c7a; --code-bg: #efe9f6; color-scheme: light; }
+}
+:root[data-theme="light"] { --bg: #f6f3fa; --surface: #ffffff; --line: #e1d9ea; --fg: #1a1024; --muted: #5e536c; --accent: #4b1c7a; --code-bg: #efe9f6; color-scheme: light; }
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 1.0625rem; line-height: 1.65; }
+img { max-width: 100%; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-left: var(--gutter-l); padding-right: var(--gutter-r); }
+.promo { background: var(--brand); color: #fff; font-size: 0.88rem; }
+.promo .wrap { display: flex; justify-content: space-between; align-items: center; gap: 6px 18px; flex-wrap: wrap; padding-block: 8px; }
+.promo a { color: #fff; }
+.promo-cta { font-weight: 600; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.5); }
+.top { padding-block: 18px; border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; gap: 16px 22px; flex-wrap: wrap; }
+.brand-block { display: grid; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--font-display); font-weight: 800; font-stretch: 112%; font-size: 1.25rem; }
+.brand img { width: 34px; height: 34px; }
+.byline { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--muted); font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; margin-left: 44px; }
+.byline img { width: 36px; height: 36px; display: block; }
+.logo-on-light { display: none !important; }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .logo-on-dark { display: none !important; } :root:not([data-theme="dark"]) .logo-on-light { display: block !important; } }
+:root[data-theme="light"] .logo-on-dark { display: none !important; }
+:root[data-theme="light"] .logo-on-light { display: block !important; }
+.nav { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; font-size: 0.95rem; margin-left: auto; }
+.nav a { text-decoration: none; color: var(--muted); }
+.nav a:hover, .nav a[aria-current="page"] { color: var(--fg); }
+.nav .btn { background: var(--brand); color: var(--brand-ink); padding: 8px 16px; border-radius: 999px; font-weight: 600; }
+.doc { max-width: 780px; padding-block: 48px 24px; }
+.eyebrow { font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin: 0 0 12px; }
+h1, h2, h3 { font-family: var(--font-display); font-stretch: 112%; line-height: 1.1; text-wrap: balance; }
+h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; margin: 0 0 14px; }
+h2 { font-size: 1.6rem; font-weight: 700; margin: 48px 0 12px; }
+h3 { font-size: 1.2rem; font-weight: 700; margin: 32px 0 8px; }
+.anchor { text-decoration: none; }
+.anchor:hover::after { content: " #"; color: var(--muted); }
+.lede { font-size: 1.25rem; color: var(--muted); margin: 0 0 8px; }
+.md-link { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); }
+p, ul, ol { margin: 0 0 16px; }
+li { margin-bottom: 6px; }
+code { font-family: var(--font-mono); font-size: 0.86em; background: var(--code-bg); padding: 1px 6px; border-radius: 5px; }
+pre { background: var(--code-bg); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; overflow-x: auto; }
+pre code { background: none; padding: 0; }
+.table { overflow-x: auto; margin: 0 0 20px; border: 1px solid var(--line); border-radius: 10px; }
+table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+th, td { text-align: left; vertical-align: top; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+th { font-weight: 600; background: var(--surface); }
+tr:last-child td { border-bottom: 0; }
+figure { margin: 8px 0 28px; }
+figure img { display: block; width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--line); background: #000; }
+figure img[src*="web-control"] { max-width: 360px; }
+figcaption { font-size: 0.88rem; color: var(--muted); margin-top: 8px; }
+.pager { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 24px; margin-top: 48px; }
+.pager a { text-decoration: none; color: var(--accent); font-weight: 600; }
+footer { padding-block: 40px; }
+footer .wrap { display: flex; justify-content: space-between; gap: 12px 24px; flex-wrap: wrap; font-size: 0.85rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 24px; }
+@media (max-width: 560px) { .nav a:not(.btn) { display: none; } }
+</style>
+</head>
+<body>
+<div class="promo"><div class="wrap">
+  <p style="margin:0">A free, open-source tool by <a href="https://4h1m.com/"><strong>4H1M Production</strong></a></p>
+  <a class="promo-cta" href="https://www.darujme.cz/4h1m">Support 4H1M →</a>
+</div></div>
+<header class="top"><div class="wrap">
+  <div class="brand-block">
+    <a class="brand" href="/"><img src="/img/wbwriter-mark.png" alt="">WBWriter</a>
+    <a class="byline" href="https://4h1m.com/" aria-label="Open-source tool by 4H1M Production">
+      <span>Open-source tool by</span>
+      <img class="logo-on-dark" src="/img/4h1m-logo-white.png" alt="4H1M Production" width="36" height="36">
+      <img class="logo-on-light" src="/img/4h1m-logo.png" alt="4H1M Production" width="36" height="36">
+    </a>
+  </div>
+  <nav class="nav" aria-label="Docs"><a href="/docs/quick-start" aria-current="page">Quick start</a><a href="/docs/faq">FAQ</a><a class="btn" href="https://github.com/4H1Mzs/wbwriter/releases/latest">Download</a></nav>
+</div></header>
+<main class="wrap doc">
+  <p class="eyebrow">WBWriter docs</p>
+  <h1>WBWriter quick start</h1>
+  <p class="lede">How to install WBWriter on macOS, set it up for a show, and send the board to an LED wall over NDI® or HDMI.</p>
+  <p class="md-link"><a href="/docs/quick-start.md">View as Markdown</a></p>
+<h2 id="install"><a class="anchor" href="#install">Install</a></h2>
+<ol><li>Download the latest <code>.dmg</code> from <a href="https://github.com/4H1Mzs/wbwriter/releases/latest">https://github.com/4H1Mzs/wbwriter/releases/latest</a>.</li><li>Open it and drag <strong>WBWriter</strong> into <strong>Applications</strong>.</li><li>Open WBWriter. When macOS asks to let it find devices on your local network, click <strong>Allow</strong>. NDI can't work without this.</li></ol>
+<p>Requirements: macOS 13 or later, on Apple Silicon or Intel.</p>
+<h2 id="set-up-the-show"><a class="anchor" href="#set-up-the-show">Set up the show</a></h2>
+<p>All settings are in the setup window and are saved between launches.</p>
+<figure><img src="/img/setup-window-a9afe185.webp" alt="The WBWriter setup window with output, NDI, pen and board settings" loading="lazy"><figcaption>The WBWriter setup window with output, NDI, pen and board settings</figcaption></figure>
+<div class="table"><table><thead><tr><th>Setting</th><th>What to choose</th></tr></thead><tbody><tr><td>Resolution</td><td>Your LED wall's pixel size. Presets: 1920×1080, 3840×2160, 2560×1440, 1280×720, 1080×1920 (portrait), or custom.</td></tr><tr><td>Frame rate</td><td>23.976, 24, 25, 29.97, 30, 50, 59.94 or 60 fps. Match your video system.</td></tr><tr><td>Background</td><td><em>Black</em> for a normal feed. <em>Transparent</em> for an alpha overlay (BGRA, straight alpha).</td></tr><tr><td>Send NDI®</td><td>On or off.</td></tr><tr><td>NDI source name</td><td>Receivers see <code>MACHINE-NAME (your name)</code>.</td></tr><tr><td>Pen color</td><td>White by default.</td></tr><tr><td>Pen width</td><td>Pixels at 1080p, scaled with the output resolution. Default 8 matches OpenBoard's thickest default pen.</td></tr><tr><td>Board display</td><td>Which screen is the touchscreen.</td></tr><tr><td>Margin</td><td>Space around the board on the touchscreen.</td></tr><tr><td>Clear gesture</td><td>Single tap, double tap (safer), or none (no button).</td></tr><tr><td>Clear button</td><td>Which corner of the touchscreen it sits in.</td></tr><tr><td>Corner logo</td><td>A small, faint logo in the bottom-right corner of the touchscreen: 4H1M, your own image, or none. It's never sent to the outputs.</td></tr><tr><td>Hide mouse cursor</td><td>Hides the pointer while live.</td></tr><tr><td>HDMI output</td><td>An external display for a clean full-screen feed, or <em>None</em>.</td></tr><tr><td>Web control</td><td>Off by default. When on, it shows the address to open on a phone, with an optional port and PIN.</td></tr></tbody></table></div>
+<h2 id="go-live"><a class="anchor" href="#go-live">Go live</a></h2>
+<p>Click <strong>Go Live</strong> or press Return. The board fills the touchscreen, and the Dock and menu bar are hidden.</p>
+<figure><img src="/img/board-live-3bd3d179.webp" alt="Live mode on the touchscreen: the black board with a faint border, the clear button in the corner and the status line below" loading="lazy"><figcaption>Live mode on the touchscreen: the black board with a faint border, the clear button in the corner and the status line below</figcaption></figure>
+<ul><li>Write with a finger, pen or mouse.</li><li>Tap the clear button to erase the board. <strong>Backspace</strong> on a keyboard also clears it.</li><li>Press <strong>Esc</strong> to return to setup.</li></ul>
+<h2 id="read-the-status-line"><a class="anchor" href="#read-the-status-line">Read the status line</a></h2>
+<p>A small status line sits outside the board, near the bottom of the touchscreen. When there isn't room below the board, it moves into the margin beside it and wraps onto several lines. It's never sent to NDI or HDMI.</p>
+<figure><img src="/img/status-line-60ecde80.webp" alt="The status line: NDI state, source name, resolution and frame rate, receivers, network traffic and battery" loading="lazy"><figcaption>The status line: NDI state, source name, resolution and frame rate, receivers, network traffic and battery</figcaption></figure>
+<div class="table"><table><thead><tr><th>Indicator</th><th>Meaning</th></tr></thead><tbody><tr><td>Green <code>NDI OK</code></td><td>Sending at the target frame rate, with at least one receiver connected.</td></tr><tr><td>Yellow <code>NDI waiting</code></td><td>Sending fine, but no receiver is connected yet.</td></tr><tr><td>Red <code>NDI DROPPING</code></td><td>Sending below 90% of the target frame rate.</td></tr><tr><td><code>… fps</code></td><td>Measured send rate.</td></tr><tr><td><code>… rx</code></td><td>Number of connected NDI receivers.</td></tr><tr><td><code>TX … Mb/s</code></td><td>Total outgoing traffic on the Mac's Ethernet and Wi-Fi interfaces.</td></tr><tr><td><code>Battery …%</code></td><td>Shown only on battery power. Turns red at 20% or below.</td></tr></tbody></table></div>
+<h2 id="control-it-from-a-phone"><a class="anchor" href="#control-it-from-a-phone">Control it from a phone</a></h2>
+<p>Turn on <strong>Web control</strong> in the setup window and open one of the addresses it shows (for example <code>http://Stage-Mac.local:8080</code>) on a phone or laptop on the same network.</p>
+<ul><li><strong>Clear board:</strong> tap twice to confirm.</li><li><strong>Message to the performer:</strong> shown in yellow in the hatched area of the touchscreen, never on NDI or HDMI. It stays until you tap <strong>Remove message</strong>, or disappears after 10 seconds, 30 seconds or a minute.</li></ul>
+<figure><img src="/img/web-control-3ca9986a.webp" alt="The WBWriter Remote page on a phone, with Clear board, a message field and Remove message" loading="lazy"><figcaption>The WBWriter Remote page on a phone, with Clear board, a message field and Remove message</figcaption></figure>
+<figure><img src="/img/board-message-226d19b7.webp" alt="A message for the performer shown in yellow below the board on the touchscreen" loading="lazy"><figcaption>A message for the performer shown in yellow below the board on the touchscreen</figcaption></figure>
+<p>The actions work only while WBWriter is live. Set a PIN if other people share the network. If the macOS firewall is on, allow incoming connections for WBWriter when asked.</p>
+<h2 id="receive-the-feed"><a class="anchor" href="#receive-the-feed">Receive the feed</a></h2>
+<p>Any NDI receiver works, for example vMix, OBS with DistroAV, Resolume, NDI Studio Monitor, TriCaster or disguise. Look for the source named <code>MACHINE (WBWriter)</code>, or whatever name you set.</p>
+<h2 id="test-without-touching-the-screen"><a class="anchor" href="#test-without-touching-the-screen">Test without touching the screen</a></h2>
+<p>Run <code>/Applications/WBWriter.app/Contents/MacOS/WBWriter --selftest</code>. WBWriter goes live right away and draws a test stroke, which is useful for checking NDI or HDMI routing from the video desk.</p>
+<p>Support: <a href="mailto:simon@4h1m.com">simon@4h1m.com</a></p>
+  <nav class="pager" aria-label="More docs"><a href="/">← wbwriter.app</a><a href="/docs/faq">FAQ →</a></nav>
+</main>
+<footer><div class="wrap">
+  <span>© 2026 4H1M, z.s. · <a href="/">wbwriter.app</a> · <a href="https://github.com/4H1Mzs/wbwriter">Open source on GitHub</a> · Support: <a href="mailto:simon@4h1m.com">simon@4h1m.com</a></span>
+  <span>NDI® is a registered trademark of Vizrt NDI AB.</span>
+</div></footer>
+</body>
+</html>

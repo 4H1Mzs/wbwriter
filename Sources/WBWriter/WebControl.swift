@@ -219,6 +219,7 @@ enum WebControlPage {
     <style>
     :root { --bg:#0d0a12; --surface:#17121e; --line:#2c2436; --fg:#f2eef8; --muted:#a59bb3; --brand:#4b1c7a; --accent:#b48cff; --warn:#ffd45a; --ok:#3ddc84; --bad:#ff6b6b; color-scheme: dark; }
     * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
     body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
            padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); }
     main { max-width: 520px; margin: 0 auto; display: grid; gap: 18px; }

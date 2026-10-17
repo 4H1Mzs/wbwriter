@@ -25,6 +25,8 @@ Yes. Set **Background** to *Transparent*. WBWriter then sends BGRA with straight
 
 The board on the touchscreen has exactly the aspect ratio of the output. Everything inside the board is sent pixel for pixel. The hatched area, border, clear button and status line stay on the touchscreen only.
 
+![The touchscreen in live mode. Only the inside of the board is sent to the LED wall.](https://wbwriter.app/img/board-live-3bd3d179.webp)
+
 ## Can I prevent someone from clearing the board by accident?
 
 Set **Clear gesture** to *Double tap*, or to *None* to hide the button entirely. An operator can still clear the board with Backspace on a keyboard.
