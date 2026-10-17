@@ -16,6 +16,8 @@ DOCS = PUBLIC / "docs"
 SITE = "https://wbwriter.app"
 ORDER = ["quick-start", "faq"]  # nav order
 NAV_TITLES = {"quick-start": "Quick start", "faq": "FAQ"}
+OG_ALT = ("WBWriter: a black stage board with 'Welcome to the show!' handwritten in white, "
+          "next to the headline Write it live. Put it on the wall.")
 
 
 # ---------------------------------------------------------------- Markdown
@@ -236,10 +238,16 @@ def page(slug: str, title: str, summary: str, body: str) -> str:
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="WBWriter">
 <meta property="og:url" content="{url}">
-<meta property="og:title" content="{t}">
+<meta property="og:title" content="{t} · WBWriter">
 <meta property="og:description" content="{d}">
 <meta property="og:image" content="{SITE}/{og_image}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{OG_ALT}">
+<meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{t} · WBWriter">
+<meta name="twitter:description" content="{d}">
 <meta name="twitter:image" content="{SITE}/{og_image}">
 <script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
