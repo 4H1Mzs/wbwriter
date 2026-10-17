@@ -36,8 +36,9 @@ jobs:
       - name: Build, sign and notarize
         run: |
           export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
-          # NOTARY_PROFILE is the notarytool keychain profile stored on the build Mac.
-          VERSION="${RELEASE_TAG#v}" NOTARY_PROFILE="${NOTARY_PROFILE:-WBWrite}" scripts/build.sh
+          # The notary profile lives in the login keychain on the build Mac, so it works while the Mac is locked.
+          VERSION="${RELEASE_TAG#v}" NOTARY_PROFILE=WBWriter \
+            NOTARY_KEYCHAIN="$HOME/Library/Keychains/login.keychain-db" scripts/build.sh
 
       - name: Verify
         run: |

@@ -122,11 +122,12 @@ scripts/build.sh       # universal, Developer ID–signed app + .zip + .dmg
 To notarize, store a notarytool profile once and pass it to the build:
 
 ```bash
-xcrun notarytool store-credentials WBWriter --apple-id "you@example.com" --team-id <TEAM_ID>
-NOTARY_PROFILE=WBWriter scripts/build.sh
+xcrun notarytool store-credentials WBWriter --apple-id "you@example.com" --team-id <TEAM_ID> \
+  --keychain ~/Library/Keychains/login.keychain-db
+NOTARY_PROFILE=WBWriter NOTARY_KEYCHAIN=~/Library/Keychains/login.keychain-db scripts/build.sh
 ```
 
-Other variables: `VERSION`, `BUILD`, `NDI_SDK`, `SIGN_ID`, `INSTALLER_ID`.
+Storing the profile in the login keychain keeps notarization working while the Mac is locked, which matters on a build server. Other variables: `VERSION`, `BUILD`, `NDI_SDK`, `SIGN_ID`, `INSTALLER_ID`.
 
 `WBWriter --selftest` goes live right away and draws a test stroke. It's useful for checking NDI or HDMI routing without touching the screen.
 

@@ -4,6 +4,7 @@
 #
 #   scripts/build.sh                       # build + sign
 #   NOTARY_PROFILE=WBWriter scripts/build.sh  # build + sign + notarize + staple
+#   NOTARY_KEYCHAIN=~/Library/Keychains/login.keychain-db  # where the profile lives (optional)
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -12,6 +13,9 @@ BUILD="${BUILD:-$(git rev-list --count HEAD 2>/dev/null || echo 1)}"
 NDI_SDK="${NDI_SDK:-/Library/NDI SDK for Apple}"
 SIGN_ID="${SIGN_ID:-Developer ID Application: Simon Cechacek (5BNMD65YZJ)}"
 NOTARY_PROFILE="${NOTARY_PROFILE:-}"
+# Optional keychain file holding the notary profile. A profile stored in the login keychain
+# (store-credentials --keychain ~/Library/Keychains/login.keychain-db) also works while the Mac is locked.
+NOTARY_KEYCHAIN="${NOTARY_KEYCHAIN:-}"
 
 APP="build/WBWriter.app"
 C="$APP/Contents"
@@ -40,7 +44,8 @@ codesign --verify --deep --strict --verbose=2 "$APP"
 notarize() { # file
   [[ -n "$NOTARY_PROFILE" ]] || return 0
   echo "==> Notarizing $(basename "$1")"
-  xcrun notarytool submit "$1" --keychain-profile "$NOTARY_PROFILE" --wait
+  xcrun notarytool submit "$1" --keychain-profile "$NOTARY_PROFILE" \
+    ${NOTARY_KEYCHAIN:+--keychain "$NOTARY_KEYCHAIN"} --wait
 }
 
 ZIP="build/WBWriter-$VERSION.zip"
