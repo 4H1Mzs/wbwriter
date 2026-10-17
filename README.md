@@ -21,7 +21,7 @@
   <img alt="macOS 13+" src="https://img.shields.io/badge/macOS-13%2B-2A0F4A?logo=apple&logoColor=white">
   <img alt="Universal" src="https://img.shields.io/badge/Apple%20Silicon%20%2B%20Intel-universal-4B1C7A">
   <img alt="Notarized" src="https://img.shields.io/badge/signed%20%26%20notarized-Apple-2A0F4A">
-  <img alt="NDI 6" src="https://img.shields.io/badge/NDI%C2%AE-6-4B1C7A">
+  <img alt="NDI 6.3" src="https://img.shields.io/badge/NDI%C2%AE-6.3-4B1C7A">
 </p>
 
 <p align="center"><sub>Made with ❤️ by <a href="https://4h1m.com/"><b>4H1M, z.s.</b></a>, a Czech nonprofit audiovisual production</sub></p>
