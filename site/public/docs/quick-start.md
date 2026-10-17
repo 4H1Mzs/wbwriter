@@ -1,0 +1,63 @@
+# WBWrite quick start
+
+> How to install WBWrite on macOS, set it up for a show, and send the board to an LED wall over NDI® or HDMI.
+
+## Install
+
+1. Download the latest `.dmg` from https://github.com/4H1Mzs/wbwriter/releases/latest.
+2. Open it and drag **WBWrite** into **Applications**.
+3. Open WBWrite. When macOS asks to let it find devices on your local network, click **Allow**. NDI can't work without this.
+
+Requirements: macOS 13 or later, on Apple Silicon or Intel.
+
+## Set up the show
+
+All settings are in the setup window and are saved between launches.
+
+| Setting | What to choose |
+|---|---|
+| Resolution | Your LED wall's pixel size. Presets: 1920×1080, 3840×2160, 2560×1440, 1280×720, 1080×1920 (portrait), or custom. |
+| Frame rate | 23.976, 24, 25, 29.97, 30, 50, 59.94 or 60 fps. Match your video system. |
+| Background | *Black* for a normal feed. *Transparent* for an alpha overlay (BGRA, straight alpha). |
+| Send NDI® | On or off. |
+| NDI source name | Receivers see `MACHINE-NAME (your name)`. |
+| Pen color | White by default. |
+| Pen width | Pixels at 1080p, scaled with the output resolution. Default 8 matches OpenBoard's thickest default pen. |
+| Board display | Which screen is the touchscreen. |
+| Margin | Space around the board on the touchscreen. |
+| Clear gesture | Single tap, double tap (safer), or none (no button). |
+| Clear button | Which corner of the touchscreen it sits in. |
+| Hide mouse cursor | Hides the pointer while live. |
+| HDMI output | An external display for a clean full-screen feed, or *None*. |
+
+## Go live
+
+Click **Go Live** or press Return. The board fills the touchscreen, and the Dock and menu bar are hidden.
+
+- Write with a finger, pen or mouse.
+- Tap the clear button to erase the board. **Backspace** on a keyboard also clears it.
+- Press **Esc** to return to setup.
+
+## Read the status line
+
+A small status line sits in a bottom corner of the touchscreen, only where it fits outside the board. It's never sent to NDI or HDMI.
+
+| Indicator | Meaning |
+|---|---|
+| Green `NDI OK` | Sending at the target frame rate, with at least one receiver connected. |
+| Yellow `NDI waiting` | Sending fine, but no receiver is connected yet. |
+| Red `NDI DROPPING` | Sending below 90% of the target frame rate. |
+| `… fps` | Measured send rate. |
+| `… rx` | Number of connected NDI receivers. |
+| `TX … Mb/s` | Total outgoing traffic on the Mac's Ethernet and Wi-Fi interfaces. |
+| `Battery …%` | Shown only on battery power. Turns red at 20% or below. |
+
+## Receive the feed
+
+Any NDI receiver works, for example vMix, OBS with DistroAV, Resolume, NDI Studio Monitor, TriCaster or disguise. Look for the source named `MACHINE (WBWrite)`, or whatever name you set.
+
+## Test without touching the screen
+
+Run `/Applications/WBWrite.app/Contents/MacOS/WBWrite --selftest`. WBWrite goes live right away and draws a test stroke, which is useful for checking NDI or HDMI routing from the video desk.
+
+Support: simon@4h1m.com

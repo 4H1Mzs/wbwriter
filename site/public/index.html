@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>WBWrite · Live stage whiteboard for NDI® &amp; HDMI · Free and open source</title>
+<meta name="description" content="WBWrite is a free, open-source live stage whiteboard for macOS. Performers write on a touchscreen and the audience sees it on the LED wall over NDI® or HDMI, with no UI on stage.">
+<link rel="canonical" href="https://wbwriter.app/">
+<meta name="robots" content="index, follow">
+<meta name="author" content="4H1M, z.s.">
+<meta name="theme-color" content="#4b1c7a">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="alternate" type="text/markdown" href="/index.md" title="WBWrite (Markdown)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="WBWrite">
+<meta property="og:url" content="https://wbwriter.app/">
+<meta property="og:title" content="WBWrite · Write it live. Put it on the wall.">
+<meta property="og:description" content="Free, open-source stage whiteboard for macOS. Write on a touchscreen, send a clean NDI® or HDMI feed to the LED wall. By 4H1M Production.">
+<meta property="og:image" content="https://wbwriter.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="WBWrite: a black stage board with 'Welcome to the show!' handwritten in white, next to the headline Write it live. Put it on the wall.">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="WBWrite · Write it live. Put it on the wall.">
+<meta name="twitter:description" content="Free, open-source stage whiteboard for macOS with clean NDI® and HDMI output. By 4H1M Production.">
+<meta name="twitter:image" content="https://wbwriter.app/og.png">
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "WBWrite", "description": "WBWrite is a free, open-source live stage whiteboard for macOS. Performers write on a touchscreen and the audience sees it on the LED wall over NDI® or HDMI, with no UI on stage.", "url": "https://wbwriter.app/", "image": "https://wbwriter.app/og.png", "applicationCategory": "MultimediaApplication", "operatingSystem": "macOS 13 or later", "softwareVersion": "1.0.1", "downloadUrl": "https://github.com/4H1Mzs/wbwriter/releases/latest", "codeRepository": "https://github.com/4H1Mzs/wbwriter", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}, "author": {"@type": "Organization", "name": "4H1M, z.s.", "url": "https://4h1m.com/"}, "publisher": {"@type": "Organization", "name": "4H1M, z.s.", "url": "https://4h1m.com/"}}, {"@context": "https://schema.org", "@type": "Organization", "name": "4H1M, z.s.", "alternateName": "4H1M Production", "url": "https://4h1m.com/", "logo": "https://wbwriter.app/img/4h1m-logo.png", "sameAs": ["https://www.instagram.com/4h1m.production/", "https://github.com/4H1Mzs"], "email": "simon@4h1m.com", "contactPoint": {"@type": "ContactPoint", "contactType": "customer support", "email": "simon@4h1m.com", "availableLanguage": ["en", "cs"]}}]</script>
+<style>
+html { -webkit-text-size-adjust: 100%; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112,500;112,700;125,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@700&display=swap">
+<style>
+/* Layout: a stage. The hero is the product itself, a live black board inside a hatched
+   surround, followed by a plain spec sheet, the signal chain and the download. */
+:root {
+  --bg: #0d0a12;            /* backstage, near-black with violet bias */
+  --surface: #16111d;
+  --line: #2a2233;
+  --fg: #f2eef8;            /* chalk white */
+  --muted: #a59bb3;
+  --accent: #b48cff;        /* stage-light violet, readable on dark */
+  --brand: #4b1c7a;         /* WBWrite dark purple */
+  --brand-ink: #ffffff;
+  --hatch: rgba(255,255,255,0.035);
+  --surround: #111013;
+  --board-line: rgba(255,255,255,0.6);
+  --ok: #3ddc84; --warn: #f5c542;
+
+  --font-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-hand: "Caveat", "Bradley Hand", "Segoe Print", cursive;
+
+  --step-0: 1rem; --step-1: 1.25rem; --step-2: 1.6rem; --step-3: 2.3rem; --step-4: clamp(2.1rem, 6.4vw, 5.4rem);
+  --radius: 14px;
+  --gutter-l: max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r: max(16px, env(safe-area-inset-right, 0px));
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f6f3fa; --surface: #ffffff; --line: #e1d9ea; --fg: #1a1024; --muted: #5e536c;
+    --accent: #4b1c7a; --brand: #4b1c7a; --brand-ink: #ffffff;
+    --hatch: rgba(255,255,255,0.035); --surround: #111013; --board-line: rgba(255,255,255,0.6);
+    --ok: #1f9d55; --warn: #b7791f;
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #f6f3fa; --surface: #ffffff; --line: #e1d9ea; --fg: #1a1024; --muted: #5e536c;
+  --accent: #4b1c7a; --brand: #4b1c7a; --brand-ink: #ffffff;
+  --hatch: rgba(255,255,255,0.035); --surround: #111013; --board-line: rgba(255,255,255,0.6);
+  --ok: #1f9d55; --warn: #b7791f;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 1.0625rem; line-height: 1.6; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+h1, h2, h3 { font-family: var(--font-display); font-stretch: 112%; line-height: 1.05; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-left: var(--gutter-l); padding-right: var(--gutter-r); }
+.eyebrow { font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+
+/* Header */
+.top { padding-block: 18px; }
+.top .wrap { display: flex; align-items: center; gap: 16px 22px; flex-wrap: wrap; }
+.top .nav { margin-left: auto; }
+.byline { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--muted); font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; margin-left: 44px; }
+.byline:hover { color: var(--fg); }
+.byline img { width: 36px; height: 36px; display: block; }
+.brand-block { display: grid; gap: 0; }
+.logo-on-light { display: none !important; }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .logo-on-dark { display: none !important; } :root:not([data-theme="dark"]) .logo-on-light { display: block !important; } }
+:root[data-theme="light"] .logo-on-dark { display: none !important; }
+:root[data-theme="light"] .logo-on-light { display: block !important; }
+.promo { background: var(--brand); color: #fff; font-size: 0.88rem; }
+.promo .wrap { display: flex; justify-content: space-between; align-items: center; gap: 6px 18px; flex-wrap: wrap; padding-block: 8px; }
+.promo a { color: #fff; }
+.promo-cta { font-weight: 600; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.5); }
+.promo-cta:hover { border-bottom-color: #fff; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--font-display); font-weight: 800; font-stretch: 112%; font-size: 1.25rem; }
+.brand img { width: 34px; height: 34px; }
+.nav { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; font-size: 0.95rem; }
+.nav a { text-decoration: none; color: var(--muted); }
+.nav a:hover { color: var(--fg); }
+
+.btn { display: inline-flex; align-items: center; gap: 10px; padding: 12px 20px; border-radius: 999px; font-weight: 600; text-decoration: none; font-size: 1rem; border: 1px solid transparent; }
+.btn-primary { background: var(--brand); color: var(--brand-ink); }
+.btn-primary:hover { filter: brightness(1.15); }
+.btn-ghost { border-color: var(--line); color: var(--fg); }
+.btn-ghost:hover { border-color: var(--muted); }
+.btn svg { width: 18px; height: 18px; flex: none; }
+.nav .btn { padding: 8px 16px; font-size: 0.9rem; color: var(--brand-ink); }
+
+/* Hero */
+.hero { padding-block: clamp(28px, 6vw, 72px) 0; }
+.hero-copy > * { min-width: 0; }
+.hero-copy { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 28px 48px; align-items: end; }
+.hero h1 { font-size: var(--step-4); font-weight: 800; font-stretch: 125%; letter-spacing: -0.02em; }
+.hero h1 em { font-style: normal; color: var(--accent); }
+.hero-side { display: grid; gap: 22px; }
+.lede { font-size: var(--step-1); color: var(--muted); max-width: 34ch; }
+.cta { display: flex; gap: 12px; flex-wrap: wrap; }
+.meta { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); }
+
+/* The stage: hatched surround + board, exactly like the app */
+.stage {
+  margin-top: clamp(32px, 5vw, 56px);
+  background-color: var(--surround);
+  background-image: repeating-linear-gradient(135deg, var(--hatch) 0 9px, transparent 9px 23px);
+  border-radius: var(--radius);
+  padding: clamp(14px, 3vw, 36px) clamp(14px, 3vw, 36px) 12px;
+  position: relative;
+  color: #f2eef8;
+}
+.board { position: relative; aspect-ratio: 16 / 9; max-width: 100%; border: 3px solid var(--board-line); background: #000; touch-action: none; cursor: crosshair; }
+.board canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.clear {
+  position: absolute; top: 10px; right: 10px; width: 56px; height: 56px; border-radius: 50%;
+  background: rgba(255,255,255,0.17); border: 2px solid rgba(255,255,255,0.68); color: #fff;
+  display: grid; place-items: center; cursor: pointer; z-index: 2;
+}
+.clear:hover { background: rgba(255,255,255,0.26); }
+.clear svg { width: 24px; height: 24px; }
+.stage-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px 24px; flex-wrap: wrap; padding-top: 12px; }
+.status { font-family: var(--font-mono); font-size: 0.8rem; color: rgba(255,255,255,0.6); white-space: pre; overflow-x: auto; max-width: 100%; min-width: 0; flex: 1 1 auto; font-variant-numeric: tabular-nums; }
+.status .dot { color: #3ddc84; }
+.hint { font-family: var(--font-mono); font-size: 0.78rem; color: rgba(255,255,255,0.45); }
+
+/* Sections */
+section { padding-block: clamp(64px, 9vw, 112px) 0; }
+.section-head { display: grid; gap: 14px; max-width: 760px; margin-bottom: 40px; }
+.section-head h2 { font-size: var(--step-3); font-weight: 700; }
+.section-head p { color: var(--muted); font-size: var(--step-1); max-width: 56ch; }
+
+/* Spec sheet */
+.spec { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 56px; border-top: 1px solid var(--line); }
+.spec > div { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; padding-block: 22px; border-bottom: 1px solid var(--line); min-width: 0; }
+.spec dt { font-family: var(--font-display); font-weight: 700; font-size: var(--step-1); }
+.spec dd { margin: 0; color: var(--muted); max-width: 52ch; }
+.spec code { font-family: var(--font-mono); font-size: 0.82rem; color: var(--accent); }
+
+/* Signal chain */
+.chain { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+.chain li { position: relative; padding: 18px 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); display: grid; gap: 4px; min-width: 0; }
+.chain li.hi { border-color: var(--accent); }
+.chain strong { font-family: var(--font-display); font-weight: 700; }
+.chain span { font-size: 0.88rem; color: var(--muted); }
+.chain li:not(:last-child)::after { content: "→"; position: absolute; right: -11px; top: 50%; transform: translateY(-50%); color: var(--muted); font-family: var(--font-mono); background: var(--bg); line-height: 1; padding: 2px 0; z-index: 1; }
+
+/* Workflow + screenshot */
+.flow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr); gap: 48px; align-items: start; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 26px; counter-reset: step; }
+.steps li { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 16px; counter-increment: step; }
+.steps li::before { content: counter(step); font-family: var(--font-mono); font-size: 0.9rem; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; color: var(--accent); }
+.steps h3 { font-size: var(--step-1); font-weight: 700; margin-bottom: 4px; }
+.steps p { color: var(--muted); }
+kbd { font-family: var(--font-mono); font-size: 0.8em; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; padding: 1px 6px; color: var(--fg); }
+.shot { border-radius: 12px; overflow: hidden; border: 1px solid var(--line); background: var(--surface); }
+.shot img { display: block; width: 100%; height: auto; }
+.shot figcaption { font-size: 0.85rem; color: var(--muted); padding: 10px 14px; border-top: 1px solid var(--line); }
+
+/* Download */
+.dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.platform { border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; display: grid; gap: 12px; align-content: start; background: var(--surface); min-width: 0; }
+.platform.live { border-color: var(--accent); }
+.platform h3 { font-size: var(--step-2); font-weight: 700; }
+.platform p { color: var(--muted); font-size: 0.95rem; }
+.pill { justify-self: start; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+.platform.live .pill { border-color: var(--ok); color: var(--ok); }
+.platform .btn { justify-self: start; margin-top: 6px; }
+
+/* Open source */
+.oss-tag { display: inline-flex; align-items: center; gap: 10px; justify-self: start; font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); border: 1px solid var(--accent); border-radius: 999px; padding: 5px 14px; }
+.oss-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); }
+.oss { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: center; }
+.oss-copy { display: grid; gap: 18px; min-width: 0; }
+.oss-copy h2 { font-size: var(--step-3); font-weight: 700; }
+.oss-copy > p { color: var(--muted); font-size: var(--step-1); max-width: 52ch; }
+.oss-points { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; color: var(--muted); }
+.oss-points strong { color: var(--fg); font-weight: 600; }
+.terminal { border-radius: 12px; overflow: hidden; border: 1px solid #2a2233; background: #0b0910; color: #e9e4f2; min-width: 0; }
+.term-bar { display: flex; align-items: center; gap: 7px; padding: 10px 14px; border-bottom: 1px solid #2a2233; }
+.term-bar span { width: 11px; height: 11px; border-radius: 50%; background: #3a3144; }
+.term-bar em { font-style: normal; font-family: var(--font-mono); font-size: 0.75rem; color: #8a8096; margin-left: 8px; }
+.terminal pre { margin: 0; padding: 18px 20px 22px; font-family: var(--font-mono); font-size: 0.88rem; line-height: 1.75; overflow-x: auto; }
+.terminal .c { color: #8a8096; }
+.terminal .p { color: #b48cff; }
+.terminal .o { color: #a59bb3; }
+.terminal .ok { color: #3ddc84; }
+
+/* 4H1M */
+.org { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 40px; align-items: center; border-top: 1px solid var(--line); padding-top: 48px; }
+.org-logo img { width: 160px; height: 160px; display: block; }
+.org-logo .on-light { display: none; }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .org-logo .on-dark { display: none; } :root:not([data-theme="dark"]) .org-logo .on-light { display: block; } }
+:root[data-theme="light"] .org-logo .on-dark { display: none; }
+:root[data-theme="light"] .org-logo .on-light { display: block; }
+.org-copy { display: grid; gap: 18px; max-width: 62ch; }
+.org-copy h2 { font-size: var(--step-3); font-weight: 700; }
+.org-copy p { color: var(--muted); }
+.contact { font-size: 0.95rem; color: var(--muted); }
+.contact a { color: var(--fg); }
+.org-links { display: flex; gap: 18px; flex-wrap: wrap; font-size: 0.95rem; }
+
+footer { padding-block: 72px 40px; }
+footer .wrap { display: flex; justify-content: space-between; gap: 12px 24px; flex-wrap: wrap; font-size: 0.85rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 24px; }
+
+@media (max-width: 900px) {
+  .hero-copy, .flow, .org, .oss { grid-template-columns: minmax(0, 1fr); }
+  .spec { grid-template-columns: minmax(0, 1fr); }
+  .dl { grid-template-columns: minmax(0, 1fr); }
+  .chain { grid-template-columns: minmax(0, 1fr); }
+  .chain li:not(:last-child)::after { content: "↓"; right: auto; left: 22px; top: auto; bottom: -13px; transform: none; padding: 0 4px; }
+  .org-logo img { width: 120px; height: 120px; }
+}
+@media (max-width: 560px) {
+  .hero h1 { font-stretch: 112%; }
+  .stage-foot { display: grid; }
+  .nav a:not(.btn) { display: none; }
+  .clear { width: 44px; height: 44px; top: 6px; right: 6px; }
+  .clear svg { width: 19px; height: 19px; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+</head>
+<body>
+<div class="promo">
+  <div class="wrap">
+    <p>A free, open-source tool by <a href="https://4h1m.com/"><strong>4H1M Production</strong></a></p>
+    <a class="promo-cta" href="https://www.darujme.cz/4h1m">Support 4H1M →</a>
+  </div>
+</div>
+<header class="top">
+  <div class="wrap">
+    <div class="brand-block">
+      <a class="brand" href="#top" aria-label="WBWrite home"><img src="/img/wbwrite-mark.png" alt="">WBWrite</a>
+      <a class="byline" href="https://4h1m.com/" aria-label="Open-source tool by 4H1M Production">
+        <span class="byline-text">Open-source tool by</span>
+        <img class="logo-on-dark" src="/img/4h1m-logo-white.png" alt="4H1M Production" width="36" height="36">
+        <img class="logo-on-light" src="/img/4h1m-logo.png" alt="4H1M Production" width="36" height="36">
+      </a>
+    </div>
+    <nav class="nav" aria-label="Main">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#open-source">Open source</a>
+      <a href="#support">4H1M</a>
+      <a class="btn btn-primary" href="https://github.com/4H1Mzs/wbwriter/releases/latest">Download</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <div class="wrap">
+      <div class="hero-copy">
+        <h1>Write it live.<br><em>Put it on the wall.</em></h1>
+        <div class="hero-side">
+          <p class="oss-tag"><span class="oss-dot" aria-hidden="true"></span>Free &amp; open source</p>
+          <p class="lede">A stage whiteboard for macOS. Performers write on a touchscreen, and the audience sees it on the LED wall over NDI® or HDMI, with no toolbar on stage.</p>
+          <div class="cta">
+            <a class="btn btn-primary" href="https://github.com/4H1Mzs/wbwriter/releases/latest">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.37 12.6c-.02-2.2 1.8-3.26 1.88-3.31-1.03-1.5-2.62-1.7-3.18-1.73-1.35-.14-2.64.8-3.33.8-.69 0-1.74-.78-2.86-.76-1.47.02-2.83.86-3.59 2.17-1.53 2.66-.39 6.6 1.1 8.76.73 1.06 1.6 2.24 2.73 2.2 1.1-.04 1.51-.71 2.84-.71 1.32 0 1.7.71 2.86.69 1.18-.02 1.93-1.08 2.65-2.14.84-1.22 1.18-2.41 1.2-2.47-.03-.01-2.3-.88-2.3-3.5zM14.2 6.13c.6-.73 1.01-1.75.9-2.76-.87.04-1.92.58-2.54 1.31-.56.64-1.05 1.67-.92 2.66.97.08 1.96-.49 2.56-1.21z"/></svg>
+              Download for macOS
+            </a>
+            <a class="btn btn-ghost" href="https://github.com/4H1Mzs/wbwriter">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.5a10.5 10.5 0 0 0-3.32 20.46c.53.1.72-.23.72-.5v-1.8c-2.92.63-3.54-1.4-3.54-1.4-.48-1.22-1.17-1.54-1.17-1.54-.95-.65.07-.64.07-.64 1.06.07 1.61 1.09 1.61 1.09.94 1.6 2.46 1.14 3.06.87.1-.68.37-1.14.66-1.4-2.33-.27-4.78-1.17-4.78-5.18 0-1.15.41-2.08 1.08-2.82-.1-.27-.47-1.33.1-2.78 0 0 .88-.28 2.89 1.08a10 10 0 0 1 5.26 0c2-1.36 2.88-1.08 2.88-1.08.58 1.45.21 2.51.1 2.78.68.74 1.08 1.67 1.08 2.82 0 4.02-2.45 4.9-4.79 5.16.38.33.71.97.71 1.96v2.9c0 .28.19.61.73.5A10.5 10.5 0 0 0 12 1.5z"/></svg>
+              Source on GitHub
+            </a>
+          </div>
+          <p class="meta">v1.0.1 · macOS 13+ · Apple Silicon &amp; Intel</p>
+        </div>
+      </div>
+
+      <div class="stage" aria-label="Interactive demo of the WBWrite board">
+        <div class="board" id="board">
+          <canvas id="ink" width="1920" height="1080" aria-label="Drawing board. Draw with your mouse, finger or pen."></canvas>
+        </div>
+        <button class="clear" id="clear" type="button" aria-label="Clear the board" title="Clear">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 21h10"/><path d="M5.6 14.4l7.8-7.8a2 2 0 0 1 2.8 0l2.2 2.2a2 2 0 0 1 0 2.8L12 18H8.2l-2.6-2.6a.7.7 0 0 1 0-1z"/><path d="M9 11l5 5"/></svg>
+        </button>
+        <div class="stage-foot">
+          <p class="status" id="status"><span class="dot">●</span> NDI OK  ·  STAGE-MAC (WBWrite)  ·  1920×1080 @ 50.00 fps  ·  2 rx  ·  TX 36.2 Mb/s</p>
+          <p class="hint">Try it: draw on the board, then tap the eraser.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section id="features">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Built for the show</p>
+        <h2>One pen. One button. Nothing else on stage.</h2>
+        <p>Everything is set before the show. In live mode the performer gets a board and an eraser, and the video desk gets a clean signal.</p>
+      </div>
+      <dl class="spec">
+        <div><dt>Clean NDI® feed</dt><dd>Only the inside of the board is sent, with no UI and no border. Name the source yourself and pick a frame rate. <code>NDI 6.3 · 23.976–60 fps</code></dd></div>
+        <div><dt>Black or transparent</dt><dd>Send a black background, or alpha for keying the writing over graphics. <code>BGRX · BGRA straight alpha</code></dd></div>
+        <div><dt>Your LED wall's resolution</dt><dd>Enter the wall's exact pixels. The board is scaled to fit the touchscreen with the aspect ratio locked, so what the performer sees is what goes out. <code>1920×1080 · 3840×2160 · custom</code></dd></div>
+        <div><dt>HDMI program out</dt><dd>Run a full-screen clean feed on any external display, alongside NDI or instead of it.</dd></div>
+        <div><dt>Hatched no-draw zone</dt><dd>The area around the board is hatched, so nobody writes where the camera can't see. The board also stays clear of the MacBook notch.</dd></div>
+        <div><dt>Clear button you choose</dt><dd>A large eraser in the corner you pick. Single tap, double tap for safety, or no button at all.</dd></div>
+        <div><dt>Status line for the operator</dt><dd>A small readout beside the board shows whether NDI is healthy, the measured fps, receivers, network load and battery. It never reaches the output.</dd></div>
+        <div><dt>Show-safe</dt><dd>Dock and menu bar are hidden, sleep is off, and the setup stays locked while live. <kbd>Esc</kbd> goes back to setup.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section id="signal">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Signal chain</p>
+        <h2>From a finger on glass to the back row.</h2>
+      </div>
+      <ol class="chain">
+        <li><strong>Touchscreen</strong><span>MacBook with a touch display on stage</span></li>
+        <li class="hi"><strong>WBWrite</strong><span>Renders at the wall's resolution</span></li>
+        <li><strong>NDI® or HDMI</strong><span>Clean feed over the network or cable</span></li>
+        <li><strong>Video desk</strong><span>vMix, OBS, Resolume, TriCaster…</span></li>
+        <li><strong>LED wall</strong><span>Pixel for pixel, aspect intact</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap flow">
+      <div>
+        <div class="section-head">
+          <p class="eyebrow">How it works</p>
+          <h2>Set it up once, then just write.</h2>
+        </div>
+        <ol class="steps">
+          <li><div><h3>Set up before the show</h3><p>Resolution, frame rate, NDI name, background, pen color and width, where the clear button sits, and which screen is the touchscreen.</p></div></li>
+          <li><div><h3>Go live</h3><p>The board takes over the touchscreen. Receivers see the source as <code class="meta">MACHINE (WBWrite)</code>.</p></div></li>
+          <li><div><h3>Write</h3><p>White marker on black by default, the same thickness as OpenBoard's strongest pen. Smooth, round strokes at full output resolution.</p></div></li>
+          <li><div><h3>Clear and repeat</h3><p>Tap the eraser between messages. Press <kbd>Esc</kbd> when the show is over.</p></div></li>
+        </ol>
+      </div>
+      <figure class="shot" style="margin:0">
+        <img src="/img/setup-window.webp" width="760" height="1114" alt="WBWrite setup window with output, NDI, pen and board settings" loading="lazy">
+        <figcaption>The setup window. Everything is decided here, before the show.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="download">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Download</p>
+        <h2>Free. Open source. Ready for tonight.</h2>
+        <p>Download the signed app, or build it yourself from the source.</p>
+      </div>
+      <div class="dl">
+        <div class="platform live">
+          <span class="pill">Available</span>
+          <h3>macOS</h3>
+          <p>macOS 13 or later. Apple Silicon and Intel. Signed and notarized by Apple.</p>
+          <a class="btn btn-primary" href="https://github.com/4H1Mzs/wbwriter/releases/latest">Download .dmg</a>
+        </div>
+        <div class="platform">
+          <span class="pill">Coming soon</span>
+          <h3>Windows</h3>
+          <p>A native Windows build with the same board and NDI output is on the way.</p>
+        </div>
+        <div class="platform">
+          <span class="pill">Coming soon</span>
+          <h3>Linux</h3>
+          <p>Planned after Windows, for touch kiosks and media servers.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="open-source">
+    <div class="wrap oss">
+      <div class="oss-copy">
+        <p class="eyebrow">Open source</p>
+        <h2>Every line is on GitHub.</h2>
+        <p>WBWrite is open source. Read the code, check how the NDI output works, build your own copy, or change it for your show. Bug reports, ideas and pull requests are welcome.</p>
+        <ul class="oss-points">
+          <li><strong>Native and small.</strong> Swift and AppKit, with no web runtime inside.</li>
+          <li><strong>Built in the open.</strong> Issues, roadmap and releases are public.</li>
+          <li><strong>Signed releases from CI.</strong> Every tagged version is built, signed and notarized automatically.</li>
+        </ul>
+        <div class="cta">
+          <a class="btn btn-primary" href="https://github.com/4H1Mzs/wbwriter">Star on GitHub</a>
+          <a class="btn btn-ghost" href="https://github.com/4H1Mzs/wbwriter/issues">Report an issue</a>
+        </div>
+      </div>
+      <div class="terminal" role="img" aria-label="Terminal: clone the repository and run WBWrite from source">
+        <div class="term-bar"><span></span><span></span><span></span><em>Terminal</em></div>
+<pre><span class="c"># build WBWrite from source</span>
+<span class="p">$</span> git clone https://github.com/4H1Mzs/wbwriter
+<span class="p">$</span> cd wbwriter
+<span class="p">$</span> swift run
+<span class="o">Building for debugging...</span>
+<span class="o">Build complete!</span>
+<span class="ok">●</span> <span class="o">WBWrite is ready to go live</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <section id="support">
+    <div class="wrap">
+      <div class="org">
+        <a class="org-logo" href="https://4h1m.com/" aria-label="4H1M Production">
+          <img class="on-dark" src="/img/4h1m-logo-white.png" alt="4H1M Production">
+          <img class="on-light" src="/img/4h1m-logo.png" alt="4H1M Production">
+        </a>
+        <div class="org-copy">
+          <p class="eyebrow">Made by 4H1M, z.s.</p>
+          <h2>Free tools from a nonprofit production crew.</h2>
+          <p>4H1M is a Czech nonprofit audiovisual production serving churches and Christian events through sound, lighting, visuals, livestreaming and video. We build tools like WBWrite for our own shows and share them as free, open-source software. If it helps yours, you can support our work.</p>
+          <div class="cta">
+            <a class="btn btn-primary" href="https://www.darujme.cz/4h1m">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.8 6.6 4.8c2.1 0 3.6 1.2 5.4 3 1.8-1.8 3.3-3 5.4-3 3.6 0 5.7 3.6 4.2 7-2.1 4.6-9.6 9.2-9.6 9.2z"/></svg>
+              Support 4H1M
+            </a>
+          </div>
+          <div class="org-links">
+            <a href="https://4h1m.com/">4h1m.com</a>
+            <a href="https://www.instagram.com/4h1m.production/">Instagram @4h1m.production</a>
+            <a href="https://github.com/4H1Mzs/wbwriter">GitHub</a>
+          </div>
+          <p class="contact">Questions, support or a show you'd like to tell us about: <a href="mailto:simon@4h1m.com">simon@4h1m.com</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 4H1M, z.s. · wbwriter.app · <a href="https://github.com/4H1Mzs/wbwriter">Open source on GitHub</a> · <a href="/docs/quick-start.md">Quick start</a> · <a href="/docs/faq.md">FAQ</a></span>
+    <span>Support: <a href="mailto:simon@4h1m.com">simon@4h1m.com</a> · NDI® is a registered trademark of Vizrt NDI AB.</span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const canvas = document.getElementById("ink");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+  const PEN = 8 * H / 1080 * 1.6; // a touch heavier than the app so it reads at web sizes
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  ctx.lineCap = "round"; ctx.lineJoin = "round";
+
+  function clearBoard() { ctx.fillStyle = "#000"; ctx.fillRect(0, 0, W, H); }
+  clearBoard();
+
+  // Same stroke model as the app: quadratic smoothing through segment midpoints.
+  let last = null, lastMid = null, drawing = false, intro = null;
+  const toCanvas = (e) => {
+    const r = canvas.getBoundingClientRect();
+    return { x: (e.clientX - r.left) * W / r.width, y: (e.clientY - r.top) * H / r.height };
+  };
+  canvas.addEventListener("pointerdown", (e) => {
+    if (intro) { cancelAnimationFrame(intro); intro = null; }
+    drawing = true; canvas.setPointerCapture(e.pointerId);
+    const p = toCanvas(e); last = p; lastMid = p;
+    ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(p.x, p.y, PEN / 2, 0, Math.PI * 2); ctx.fill();
+  });
+  canvas.addEventListener("pointermove", (e) => {
+    if (!drawing) return;
+    const events = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
+    for (const ev of events) {
+      const p = toCanvas(ev);
+      if (Math.hypot(p.x - last.x, p.y - last.y) < 0.75) continue;
+      const mid = { x: (last.x + p.x) / 2, y: (last.y + p.y) / 2 };
+      ctx.strokeStyle = "#fff"; ctx.lineWidth = PEN;
+      ctx.beginPath(); ctx.moveTo(lastMid.x, lastMid.y); ctx.quadraticCurveTo(last.x, last.y, mid.x, mid.y); ctx.stroke();
+      last = p; lastMid = mid;
+    }
+  });
+  const end = (e) => {
+    if (!drawing) return; drawing = false;
+    const p = toCanvas(e);
+    ctx.strokeStyle = "#fff"; ctx.lineWidth = PEN;
+    ctx.beginPath(); ctx.moveTo(lastMid.x, lastMid.y); ctx.lineTo(p.x, p.y); ctx.stroke();
+  };
+  canvas.addEventListener("pointerup", end);
+  canvas.addEventListener("pointercancel", end);
+  document.getElementById("clear").addEventListener("click", () => {
+    if (intro) { cancelAnimationFrame(intro); intro = null; }
+    clearBoard();
+  });
+
+  // Intro: a handwritten message revealed left to right, like it's being written.
+  const message = "Welcome to the show!";
+  function drawMessage(progress) {
+    clearBoard();
+    ctx.save();
+    ctx.beginPath(); ctx.rect(0, 0, W * progress, H); ctx.clip();
+    ctx.fillStyle = "#fff";
+    ctx.font = `700 ${Math.round(H * 0.2)}px ${getComputedStyle(document.documentElement).getPropertyValue("--font-hand")}`;
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.translate(W / 2, H * 0.5); ctx.rotate(-0.04);
+    ctx.fillText(message, 0, 0);
+    ctx.restore();
+  }
+  const start = () => {
+    if (reduce) { drawMessage(1); return; }
+    const t0 = performance.now(), dur = 2600;
+    const tick = (t) => {
+      const k = Math.min(1, (t - t0) / dur);
+      drawMessage(0.12 + 0.8 * k + (k === 1 ? 0.08 : 0));
+      if (k < 1) intro = requestAnimationFrame(tick); else intro = null;
+    };
+    intro = requestAnimationFrame(tick);
+  };
+  drawMessage(1); // complete at rest, then animate
+  (document.fonts ? document.fonts.load('700 64px "Caveat"') : Promise.resolve()).then(start, start);
+
+  // Status line: gently live, like the app's operator readout.
+  const status = document.getElementById("status");
+  setInterval(() => {
+    const fps = (50 + (Math.random() - 0.5) * 0.04).toFixed(2);
+    const tx = (34 + Math.random() * 5).toFixed(1);
+    status.innerHTML = `<span class="dot">●</span> NDI OK  ·  STAGE-MAC (WBWrite)  ·  1920×1080 @ ${fps} fps  ·  2 rx  ·  TX ${tx} Mb/s`;
+  }, 1000);
+})();
+</script>
+</body>
+</html>

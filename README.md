@@ -11,6 +11,8 @@
 </p>
 
 <p align="center">
+  <a href="https://wbwriter.app/"><img alt="wbwriter.app" src="https://img.shields.io/badge/Website-wbwriter.app-2A0F4A?style=for-the-badge"></a>
+  &nbsp;
   <a href="https://github.com/4H1Mzs/wbwriter/releases/latest"><img alt="Download for macOS" src="https://img.shields.io/badge/Download-macOS-4B1C7A?style=for-the-badge&logo=apple&logoColor=white"></a>
   &nbsp;
   <a href="https://www.darujme.cz/4h1m"><img alt="Support 4H1M" src="https://img.shields.io/badge/Support-4H1M-2A0F4A?style=for-the-badge&logo=githubsponsors&logoColor=white"></a>
@@ -131,6 +133,10 @@ Other variables: `VERSION`, `BUILD`, `NDI_SDK`, `SIGN_ID`, `INSTALLER_ID`.
 
 To publish a release, push a `v*` tag. The [Release workflow](.github/workflows/release.yml) then runs on 4H1M's self-hosted Mac, which builds, signs, notarizes and staples the app and publishes the GitHub release. It never runs for pull requests.
 
+### Website
+
+The [wbwriter.app](https://wbwriter.app/) website is in [`site/`](site/). It's a static page served from Cloudflare, with Markdown docs and `llms.txt`. To deploy it, run `cd site && npm install && npx cf deploy`.
+
 ### Architecture
 
 ```
@@ -178,7 +184,7 @@ If WBWrite helps your show, please consider supporting 4H1M's development and mi
 </p>
 
 <p align="center">
-  <a href="https://4h1m.com/">4h1m.com</a> · <a href="https://www.instagram.com/4h1m.production/">Instagram @4h1m.production</a>
+  <a href="https://4h1m.com/">4h1m.com</a> · <a href="https://www.instagram.com/4h1m.production/">Instagram @4h1m.production</a> · <a href="mailto:simon@4h1m.com">simon@4h1m.com</a>
 </p>
 
 ## Credits

@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0.2" y1="0" x2="0.5" y2="1">
+      <stop offset="0" stop-color="#4E1D80"/>
+      <stop offset="0.55" stop-color="#321259"/>
+      <stop offset="1" stop-color="#1B0832"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.08" r="0.75">
+      <stop offset="0" stop-color="#9B5CE0" stop-opacity="0.30"/>
+      <stop offset="1" stop-color="#9B5CE0" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="rim" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.22"/>
+      <stop offset="0.5" stop-color="#FFFFFF" stop-opacity="0.04"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0.25"/>
+    </linearGradient>
+    <linearGradient id="ink" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#EEE6FA"/>
+    </linearGradient>
+    <radialGradient id="spark" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FFE7FF" stop-opacity="1"/>
+      <stop offset="0.35" stop-color="#E58BFF" stop-opacity="0.75"/>
+      <stop offset="1" stop-color="#C45CFF" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="14"/>
+      <feOffset dy="12" result="b"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="inkglow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="16"/>
+    </filter>
+    <clipPath id="clip"><rect x="100" y="100" width="824" height="824" rx="185" ry="185"/></clipPath>
+</defs>
+  <g filter="url(#shadow)">
+    <rect x="100" y="100" width="824" height="824" rx="185" ry="185" fill="url(#bg)"/>
+  </g>
+  <g clip-path="url(#clip)">
+    <rect x="100" y="100" width="824" height="824" fill="url(#glow)"/>
+    <!-- LED-ish halo behind the ink -->
+    <path d="M 254 330 C 296 452, 338 584, 376 686 C 384 708, 402 708, 410 688 C 440 606, 468 524, 492 458 C 498 442, 514 442, 520 458 C 546 530, 572 604, 598 670 C 606 692, 624 692, 632 672 C 694 548, 736 420, 774 300" fill="none" stroke="#B57BFF" stroke-opacity="0.45" stroke-width="96"
+          stroke-linecap="round" stroke-linejoin="round" filter="url(#inkglow)"/>
+    <!-- the marker stroke -->
+    <path d="M 254 330 C 296 452, 338 584, 376 686 C 384 708, 402 708, 410 688 C 440 606, 468 524, 492 458 C 498 442, 514 442, 520 458 C 546 530, 572 604, 598 670 C 606 692, 624 692, 632 672 C 694 548, 736 420, 774 300" fill="none" stroke="url(#ink)" stroke-width="80"
+          stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- pen spark: a small twinkle just past the stroke end -->
+    <circle cx="834" cy="240" r="62" fill="url(#spark)"/>
+    <path d="M 834 202 C 838 226, 848 236, 872 240 C 848 244, 838 254, 834 278 C 830 254, 820 244, 796 240 C 820 236, 830 226, 834 202 Z" fill="#FFFFFF"/>
+  </g>
+  <rect x="101.5" y="101.5" width="821" height="821" rx="183.5" ry="183.5" fill="none"
+        stroke="url(#rim)" stroke-width="3"/>
+
+</svg>

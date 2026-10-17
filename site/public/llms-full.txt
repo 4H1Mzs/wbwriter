@@ -1,0 +1,183 @@
+# WBWrite
+
+> Free, open-source live stage whiteboard for macOS. Performers write on a touchscreen, and the audience sees the writing on the LED wall over NDI® or HDMI, with no UI on stage. Made by 4H1M Production (4H1M, z.s.).
+
+- Website: https://wbwriter.app/
+- Download (macOS 13+, Apple Silicon and Intel, signed and notarized): https://github.com/4H1Mzs/wbwriter/releases/latest
+- Source code: https://github.com/4H1Mzs/wbwriter
+- Current version: 1.0.1
+- Price: free
+- Support: simon@4h1m.com
+- Made by: [4H1M, z.s.](https://4h1m.com/), a Czech nonprofit audiovisual production
+
+## What it does
+
+WBWrite is a stripped-down, show-safe stage whiteboard inspired by OpenBoard. Everything is set before the show. In live mode the performer gets only a board and an eraser, and the video desk gets a clean signal.
+
+## Features
+
+- **Clean NDI® feed.** Only the inside of the board is sent, with no UI and no border. The NDI source name and frame rate (23.976 to 60 fps) are configurable. Uses NDI 6.3.
+- **Black or transparent background.** Black is sent as BGRX. Transparent is sent as BGRA with straight alpha, for keying the writing over graphics.
+- **Exact LED wall resolution.** Enter the wall's pixel size (1920×1080, 3840×2160 or custom). The board is scaled to fit the touchscreen with the aspect ratio locked, so what the performer sees is what goes out.
+- **HDMI program out.** An optional full-screen clean feed on any external display, alongside NDI or instead of it.
+- **Hatched no-draw zone.** The area around the board is hatched, so it's clear where you can't draw. The board stays clear of the MacBook camera notch.
+- **Configurable clear button.** A large eraser in the corner you choose. Single tap, double tap (safer), or no button at all.
+- **Operator status line.** A small readout beside the board shows NDI health, measured fps, receiver count, network TX, source name, resolution, and battery when running on battery. It never reaches the output.
+- **Show-safe live mode.** Dock and menu bar are hidden and sleep is turned off. Esc goes back to setup.
+- **One pen.** White by default, at the thickness of OpenBoard's strongest default pen. Color and width are set before the show.
+
+## Signal chain
+
+Touchscreen (MacBook with a touch display) → WBWrite (renders at the wall's resolution) → NDI® or HDMI → video desk (vMix, OBS, Resolume, TriCaster and others) → LED wall.
+
+## How it works
+
+1. **Set up before the show.** Choose resolution, frame rate, NDI name, background, pen color and width, the clear button's corner and gesture, and which screen is the touchscreen.
+2. **Go live.** The board takes over the touchscreen. Receivers see the NDI source as `MACHINE (WBWrite)`.
+3. **Write.** Smooth, round strokes at full output resolution.
+4. **Clear and repeat.** Tap the eraser between messages. Press Esc when the show is over.
+
+## Platforms
+
+| Platform | Status |
+|---|---|
+| macOS 13 or later (Apple Silicon and Intel) | Available |
+| Windows | Coming soon |
+| Linux | Coming soon |
+
+## Open source
+
+WBWrite is open source. The code, issues, roadmap and releases are public on GitHub: https://github.com/4H1Mzs/wbwriter. It's written in Swift with AppKit. Every tagged version is built, signed and notarized automatically. Bug reports, ideas and pull requests are welcome.
+
+Build from source:
+
+```sh
+git clone https://github.com/4H1Mzs/wbwriter
+cd wbwriter
+swift run
+```
+
+## About 4H1M
+
+4H1M, z.s. (4H1M Production) is a Czech nonprofit audiovisual production serving churches and Christian events through sound, lighting, visuals, livestreaming and video. We build tools like WBWrite for our own shows and share them as free, open-source software.
+
+- Support 4H1M: https://www.darujme.cz/4h1m
+- Website: https://4h1m.com/
+- Instagram: https://www.instagram.com/4h1m.production/
+- Contact: simon@4h1m.com
+
+## More documentation
+
+- [Quick start](https://wbwriter.app/docs/quick-start.md)
+- [FAQ and troubleshooting](https://wbwriter.app/docs/faq.md)
+
+NDI® is a registered trademark of Vizrt NDI AB.
+
+---
+
+# WBWrite quick start
+
+> How to install WBWrite on macOS, set it up for a show, and send the board to an LED wall over NDI® or HDMI.
+
+## Install
+
+1. Download the latest `.dmg` from https://github.com/4H1Mzs/wbwriter/releases/latest.
+2. Open it and drag **WBWrite** into **Applications**.
+3. Open WBWrite. When macOS asks to let it find devices on your local network, click **Allow**. NDI can't work without this.
+
+Requirements: macOS 13 or later, on Apple Silicon or Intel.
+
+## Set up the show
+
+All settings are in the setup window and are saved between launches.
+
+| Setting | What to choose |
+|---|---|
+| Resolution | Your LED wall's pixel size. Presets: 1920×1080, 3840×2160, 2560×1440, 1280×720, 1080×1920 (portrait), or custom. |
+| Frame rate | 23.976, 24, 25, 29.97, 30, 50, 59.94 or 60 fps. Match your video system. |
+| Background | *Black* for a normal feed. *Transparent* for an alpha overlay (BGRA, straight alpha). |
+| Send NDI® | On or off. |
+| NDI source name | Receivers see `MACHINE-NAME (your name)`. |
+| Pen color | White by default. |
+| Pen width | Pixels at 1080p, scaled with the output resolution. Default 8 matches OpenBoard's thickest default pen. |
+| Board display | Which screen is the touchscreen. |
+| Margin | Space around the board on the touchscreen. |
+| Clear gesture | Single tap, double tap (safer), or none (no button). |
+| Clear button | Which corner of the touchscreen it sits in. |
+| Hide mouse cursor | Hides the pointer while live. |
+| HDMI output | An external display for a clean full-screen feed, or *None*. |
+
+## Go live
+
+Click **Go Live** or press Return. The board fills the touchscreen, and the Dock and menu bar are hidden.
+
+- Write with a finger, pen or mouse.
+- Tap the clear button to erase the board. **Backspace** on a keyboard also clears it.
+- Press **Esc** to return to setup.
+
+## Read the status line
+
+A small status line sits in a bottom corner of the touchscreen, only where it fits outside the board. It's never sent to NDI or HDMI.
+
+| Indicator | Meaning |
+|---|---|
+| Green `NDI OK` | Sending at the target frame rate, with at least one receiver connected. |
+| Yellow `NDI waiting` | Sending fine, but no receiver is connected yet. |
+| Red `NDI DROPPING` | Sending below 90% of the target frame rate. |
+| `… fps` | Measured send rate. |
+| `… rx` | Number of connected NDI receivers. |
+| `TX … Mb/s` | Total outgoing traffic on the Mac's Ethernet and Wi-Fi interfaces. |
+| `Battery …%` | Shown only on battery power. Turns red at 20% or below. |
+
+## Receive the feed
+
+Any NDI receiver works, for example vMix, OBS with DistroAV, Resolume, NDI Studio Monitor, TriCaster or disguise. Look for the source named `MACHINE (WBWrite)`, or whatever name you set.
+
+## Test without touching the screen
+
+Run `/Applications/WBWrite.app/Contents/MacOS/WBWrite --selftest`. WBWrite goes live right away and draws a test stroke, which is useful for checking NDI or HDMI routing from the video desk.
+
+Support: simon@4h1m.com
+
+---
+
+# WBWrite FAQ and troubleshooting
+
+> Answers to common questions about WBWrite, the free, open-source stage whiteboard for macOS with NDI® and HDMI output.
+
+## Is WBWrite free?
+
+Yes. WBWrite is free and open source. It's made by 4H1M, z.s., a Czech nonprofit. If it helps your show, you can support 4H1M at https://www.darujme.cz/4h1m.
+
+## Which platforms are supported?
+
+macOS 13 or later, on Apple Silicon and Intel. Windows and Linux builds are coming soon.
+
+## The NDI source doesn't appear on my receiver.
+
+- Open **System Settings → Privacy & Security → Local Network** and make sure WBWrite is turned on.
+- Check that the Mac and the receiver are on the same network and subnet.
+- Check that multicast and mDNS (Bonjour) aren't blocked by the network switch or firewall.
+- Look at the status line on the touchscreen. `NDI waiting` means WBWrite is sending and no receiver has connected yet.
+
+## Can I key the writing over other graphics?
+
+Yes. Set **Background** to *Transparent*. WBWrite then sends BGRA with straight alpha, so the receiver can key out everything except the writing.
+
+## What does the performer see compared with the audience?
+
+The board on the touchscreen has exactly the aspect ratio of the output. Everything inside the board is sent pixel for pixel. The hatched area, border, clear button and status line stay on the touchscreen only.
+
+## Can I prevent someone from clearing the board by accident?
+
+Set **Clear gesture** to *Double tap*, or to *None* to hide the button entirely. An operator can still clear the board with Backspace on a keyboard.
+
+## Can I change the pen during the show?
+
+No. Pen color and width are set in the setup window before the show, so nothing can change by accident in live mode.
+
+## How do I report a bug or ask for a feature?
+
+Open an issue at https://github.com/4H1Mzs/wbwriter/issues, or email simon@4h1m.com.
+
+NDI® is a registered trademark of Vizrt NDI AB.
