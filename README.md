@@ -150,7 +150,7 @@ To publish a release, push a `v*` tag. The [Release workflow](.github/workflows/
 
 ### Website
 
-The [wbwriter.app](https://wbwriter.app/) website is in [`site/`](site/). It's a static page served from Cloudflare, with Markdown docs and `llms.txt`. To deploy it, run `cd site && npm install && npx cf deploy`.
+The [wbwriter.app](https://wbwriter.app/) website is in [`site/`](site/). It's a static page served from Cloudflare, with Markdown docs and `llms.txt`. The Markdown files in `site/public/docs/` are the source of the docs: `python3 site/tools/build-docs.py` turns them into the HTML pages and `llms-full.txt`. To deploy, run `cd site && npm install && npx cf deploy`.
 
 ### Architecture
 

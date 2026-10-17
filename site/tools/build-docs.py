@@ -192,6 +192,7 @@ tr:last-child td { border-bottom: 0; }
 figure { margin: 8px 0 28px; }
 figure img { display: block; width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--line); background: #000; }
 figure img[src*="web-control"] { max-width: 360px; }
+figure img[src*="setup-window"] { max-width: 520px; }
 figcaption { font-size: 0.88rem; color: var(--muted); margin-top: 8px; }
 .pager { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 24px; margin-top: 48px; }
 .pager a { text-decoration: none; color: var(--accent); font-weight: 600; }
