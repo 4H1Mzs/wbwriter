@@ -221,12 +221,14 @@ def page(slug: str, title: str, summary: str, body: str) -> str:
     }
     t = html.escape(title)
     d = html.escape(summary)
+    # Page title for tabs and shares; add the product name only when the heading lacks it.
+    full = t if "WBWriter" in title else f"{t} · WBWriter"
     return f"""<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>{t} · WBWriter</title>
+<title>{full}</title>
 <meta name="description" content="{d}">
 <link rel="canonical" href="{url}">
 <link rel="alternate" type="text/markdown" href="/docs/{slug}.md" title="{t} (Markdown)">
@@ -238,7 +240,7 @@ def page(slug: str, title: str, summary: str, body: str) -> str:
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="WBWriter">
 <meta property="og:url" content="{url}">
-<meta property="og:title" content="{t} · WBWriter">
+<meta property="og:title" content="{full}">
 <meta property="og:description" content="{d}">
 <meta property="og:image" content="{SITE}/{og_image}">
 <meta property="og:image:width" content="1200">
@@ -246,7 +248,7 @@ def page(slug: str, title: str, summary: str, body: str) -> str:
 <meta property="og:image:alt" content="{OG_ALT}">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="{t} · WBWriter">
+<meta name="twitter:title" content="{full}">
 <meta name="twitter:description" content="{d}">
 <meta name="twitter:image" content="{SITE}/{og_image}">
 <script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>
