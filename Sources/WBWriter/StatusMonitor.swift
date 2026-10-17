@@ -45,7 +45,7 @@ class StatusLabel: NSTextField {
     convenience init() {
         self.init(wrappingLabelWithString: "")
         font = .monospacedSystemFont(ofSize: 13, weight: .medium)
-        textColor = NSColor(white: 1, alpha: 0.4)
+        textColor = NSColor(white: 1, alpha: 0.15)
         lineBreakMode = .byWordWrapping
         maximumNumberOfLines = 0
         isSelectable = false
@@ -98,7 +98,7 @@ final class StatusMonitor {
         lastBytes = bytes
 
         let font = NSFont.monospacedSystemFont(ofSize: 13, weight: .medium)
-        let dim = NSColor(white: 1, alpha: 0.4)
+        let dim = NSColor(white: 1, alpha: 0.15)
         let out = NSMutableAttributedString()
         func add(_ s: String, _ color: NSColor = dim) {
             out.append(NSAttributedString(string: s, attributes: [.font: font, .foregroundColor: color]))
@@ -119,20 +119,20 @@ final class StatusMonitor {
                 !healthy ? (.systemRed, "NDI DROPPING")
                 : receivers > 0 ? (.systemGreen, "NDI OK")
                 : (.systemYellow, "NDI waiting")
-            item("● ", dot.withAlphaComponent(0.9))
+            item("● ", dot.withAlphaComponent(0.3))
             item(state)
             add(sep); item(sender.sourceName)
             add(sep); item("\(resolution) @ " + String(format: "%.2f fps", fps))
             add(sep); item("\(receivers) rx")
             add(sep); item(String(format: "TX %.1f Mb/s", mbps))
         } else {
-            item("● ", NSColor(white: 1, alpha: 0.3))
+            item("● ", NSColor(white: 1, alpha: 0.12))
             item("NDI off")
             add(sep); item(resolution)
         }
         if let battery = SystemStatus.batteryPercentIfOnBattery() {
             add(sep)
-            item("Battery \(battery)%", battery <= 20 ? .systemRed.withAlphaComponent(0.9) : dim)
+            item("Battery \(battery)%", battery <= 20 ? .systemRed.withAlphaComponent(0.5) : dim)
         }
         return out
     }

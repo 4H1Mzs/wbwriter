@@ -61,7 +61,7 @@ final class BoardView: NSView {
         layer?.backgroundColor = Self.hatchPattern().cgColor
 
         frameLayer.backgroundColor = NSColor.black.cgColor
-        frameLayer.borderColor = NSColor(white: 1, alpha: 0.32).cgColor
+        frameLayer.borderColor = NSColor(white: 1, alpha: 0.12).cgColor
         frameLayer.borderWidth = borderWidth
         contentLayer.contentsGravity = .resize
         contentLayer.magnificationFilter = .linear
@@ -85,7 +85,7 @@ final class BoardView: NSView {
             path.move(to: NSPoint(x: -o, y: tile + o)); path.line(to: NSPoint(x: tile + o, y: -o))
             path.move(to: NSPoint(x: tile - o, y: tile + o)); path.line(to: NSPoint(x: tile + o, y: tile - o))
             path.lineWidth = 9
-            NSColor(white: 1, alpha: 0.012).setStroke()
+            NSColor(white: 1, alpha: 0.006).setStroke()
             path.stroke()
             return true
         }

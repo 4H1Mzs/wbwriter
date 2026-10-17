@@ -141,13 +141,13 @@ struct SetupView: View {
                 }
 
                 Section {
+                    LabeledContent("Port") {
+                        TextField("Port", value: $settings.webControlPort, format: .number.grouping(.never))
+                            .frame(width: 90)
+                    }
+                    TextField("PIN (optional)", text: $settings.webControlPIN)
                     Toggle("Allow remote control from a browser", isOn: $settings.webControlEnabled)
                     if settings.webControlEnabled {
-                        LabeledContent("Port") {
-                            TextField("Port", value: $settings.webControlPort, format: .number.grouping(.never))
-                                .frame(width: 90)
-                        }
-                        TextField("PIN (optional)", text: $settings.webControlPIN)
                         ForEach(WebControlServer.addresses(port: UInt16(clamping: settings.webControlPort)), id: \.self) { address in
                             LabeledContent {
                                 Button("Open") { if let url = URL(string: address) { NSWorkspace.shared.open(url) } }
