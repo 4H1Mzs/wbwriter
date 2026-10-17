@@ -24,6 +24,7 @@ WBWriter is a stripped-down, show-safe stage whiteboard inspired by OpenBoard. E
 - **Hatched no-draw zone.** The area around the board is hatched, so it's clear where you can't draw. The board stays clear of the MacBook camera notch.
 - **Configurable clear button.** A large eraser in the corner you choose. Single tap, double tap (safer), or no button at all.
 - **Operator status line.** A small readout beside the board shows NDI health, measured fps, receiver count, network TX, source name, resolution, and battery when running on battery. It never reaches the output.
+- **Built-in updates.** New versions are offered at launch with their changelog and installed only when signed by 4H1M.
 - **Show-safe live mode.** Dock and menu bar are hidden and sleep is turned off. Esc goes back to setup.
 - **One pen.** White by default, at the thickness of OpenBoard's strongest default pen. Color and width are set before the show.
 
@@ -176,6 +177,10 @@ Set **Clear gesture** to *Double tap*, or to *None* to hide the button entirely.
 ## Can I change the pen during the show?
 
 No. Pen color and width are set in the setup window before the show, so nothing can change by accident in live mode.
+
+## How do I update WBWriter?
+
+WBWriter checks for a new version each time it starts and shows the changelog when one is available. Click **Install and Restart**: it downloads the update, checks that it's signed by 4H1M, replaces the app and opens it again. You can also choose **WBWriter → Check for Updates…** at any time, or turn off the automatic check under **Updates** in the setup window. The check never interrupts live mode.
 
 ## How do I report a bug or ask for a feature?
 

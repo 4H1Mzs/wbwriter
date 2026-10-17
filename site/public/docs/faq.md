@@ -33,6 +33,10 @@ Set **Clear gesture** to *Double tap*, or to *None* to hide the button entirely.
 
 No. Pen color and width are set in the setup window before the show, so nothing can change by accident in live mode.
 
+## How do I update WBWriter?
+
+WBWriter checks for a new version each time it starts and shows the changelog when one is available. Click **Install and Restart**: it downloads the update, checks that it's signed by 4H1M, replaces the app and opens it again. You can also choose **WBWriter → Check for Updates…** at any time, or turn off the automatic check under **Updates** in the setup window. The check never interrupts live mode.
+
 ## How do I report a bug or ask for a feature?
 
 Open an issue at https://github.com/4H1Mzs/wbwriter/issues, or email simon@4h1m.com.

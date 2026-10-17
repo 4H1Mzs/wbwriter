@@ -87,6 +87,7 @@ final class AppSettings: ObservableObject {
     @Published var clearCorner: ClearCorner { didSet { defaults.set(clearCorner.rawValue, forKey: "clearCorner") } }
     @Published var clearGesture: ClearGesture { didSet { defaults.set(clearGesture.rawValue, forKey: "clearGesture") } }
     @Published var hideCursor: Bool { didSet { defaults.set(hideCursor, forKey: "hideCursor") } }
+    @Published var checkForUpdates: Bool { didSet { defaults.set(checkForUpdates, forKey: "checkForUpdates") } }
     /// Last go-live failure, shown in the setup window (not persisted).
     @Published var errorMessage: String?
 
@@ -107,6 +108,7 @@ final class AppSettings: ObservableObject {
             "clearCorner": ClearCorner.topRight.rawValue,
             "clearGesture": ClearGesture.singleTap.rawValue,
             "hideCursor": false,
+            "checkForUpdates": true,
         ])
         outputWidth = d.integer(forKey: "outputWidth")
         outputHeight = d.integer(forKey: "outputHeight")
@@ -121,6 +123,7 @@ final class AppSettings: ObservableObject {
         clearCorner = ClearCorner(rawValue: d.string(forKey: "clearCorner") ?? "") ?? .topRight
         clearGesture = ClearGesture(rawValue: d.string(forKey: "clearGesture") ?? "") ?? .singleTap
         hideCursor = d.bool(forKey: "hideCursor")
+        checkForUpdates = d.bool(forKey: "checkForUpdates")
         if let c = d.array(forKey: "penColor") as? [Double], c.count == 3 {
             penColor = Color(.sRGB, red: c[0], green: c[1], blue: c[2])
         } else {

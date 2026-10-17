@@ -19,6 +19,7 @@ struct SetupView: View {
     @State private var customResolution = false
     var goLive: () -> Void
     var showAbout: () -> Void
+    var checkForUpdates: () -> Void
 
     private var resolutionTag: Binding<String> {
         Binding(
@@ -128,6 +129,13 @@ struct SetupView: View {
                 } footer: {
                     Text("Full-screen clean feed of the board content on an external display. Leave on “None” for NDI only.")
                         .font(.caption).foregroundStyle(.secondary)
+                }
+
+                Section("Updates") {
+                    Toggle("Check for updates when WBWriter starts", isOn: $settings.checkForUpdates)
+                    LabeledContent("Version \(AppVersion.current)") {
+                        Button("Check Now", action: checkForUpdates)
+                    }
                 }
             }
             .formStyle(.grouped)

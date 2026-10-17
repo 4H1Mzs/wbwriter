@@ -7,13 +7,25 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     private var production: ProductionController?
     private var canvas: Canvas?
     private var aboutWindow: NSWindow?
+    private let updater = Updater()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NDI.requestNetworkAccess()
         buildMenu()
         showSetup()
-        if CommandLine.arguments.contains("--selftest") { runSelfTest() }
+        updater.canPresent = { [weak self] in self?.production == nil }
+        let selfTest = CommandLine.arguments.contains("--selftest")
+        if selfTest { runSelfTest() }
         if CommandLine.arguments.contains("--about") { showAbout() }
+        if settings.checkForUpdates && !selfTest {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+                self?.updater.check(userInitiated: false)
+            }
+        }
+    }
+
+    @objc func checkForUpdates() {
+        updater.check(userInitiated: true)
     }
 
     /// Goes live and draws a test stroke; used to verify NDI/HDMI output without touch input.
@@ -50,7 +62,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         if setupWindow == nil {
             let host = NSHostingController(rootView: SetupView(settings: settings,
                                                                goLive: { [weak self] in self?.goLive() },
-                                                               showAbout: { [weak self] in self?.showAbout() }))
+                                                               showAbout: { [weak self] in self?.showAbout() },
+                                                               checkForUpdates: { [weak self] in self?.checkForUpdates() }))
             let window = NSWindow(contentViewController: host)
             window.title = "WBWriter"
             window.styleMask = [.titled, .closable, .miniaturizable, .resizable]
@@ -62,6 +75,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         }
         setupWindow?.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
+        updater.presentIfPending()
     }
 
     private func goLive() {
@@ -116,6 +130,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         let appItem = NSMenuItem()
         let appMenu = NSMenu()
         appMenu.addItem(withTitle: "About WBWriter", action: #selector(showAbout), keyEquivalent: "").target = self
+        appMenu.addItem(withTitle: "Check for Updates…", action: #selector(checkForUpdates), keyEquivalent: "").target = self
         appMenu.addItem(.separator())
         appMenu.addItem(withTitle: "Hide WBWriter", action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
         appMenu.addItem(.separator())
