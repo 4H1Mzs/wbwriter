@@ -47,7 +47,7 @@ final class NDISender {
         Int(NDIlib_send_get_no_connections(instance, 0))
     }
 
-    /// Full network name as receivers see it, e.g. "MACHINE (WBWrite)".
+    /// Full network name as receivers see it, e.g. "MACHINE (WBWriter)".
     var sourceName: String {
         guard let source = NDIlib_send_get_source_name(instance), let name = source.pointee.p_ndi_name else { return "" }
         return String(cString: name)
@@ -63,7 +63,7 @@ final class NDISender {
         running = true
         stateLock.unlock()
         let thread = Thread { [self] in run() }
-        thread.name = "WBWrite.NDI"
+        thread.name = "WBWriter.NDI"
         thread.qualityOfService = .userInteractive
         thread.start()
     }

@@ -22,7 +22,7 @@ jobs:
   macos:
     name: macOS (signed + notarized)
     # 4H1M org Mac: has the NDI SDK, Developer ID certificate and the
-    # "WBWrite" notarytool keychain profile.
+    # "WBWriter" notarytool keychain profile.
     runs-on: [self-hosted, macOS]
     timeout-minutes: 60
     env:
@@ -36,14 +36,15 @@ jobs:
       - name: Build, sign and notarize
         run: |
           export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
-          VERSION="${RELEASE_TAG#v}" NOTARY_PROFILE=WBWrite scripts/build.sh
+          # NOTARY_PROFILE is the notarytool keychain profile stored on the build Mac.
+          VERSION="${RELEASE_TAG#v}" NOTARY_PROFILE="${NOTARY_PROFILE:-WBWrite}" scripts/build.sh
 
       - name: Verify
         run: |
           VERSION="${RELEASE_TAG#v}"
-          codesign --verify --deep --strict build/WBWrite.app
-          spctl --assess --type execute -vv build/WBWrite.app
-          xcrun stapler validate "build/WBWrite-$VERSION.dmg"
+          codesign --verify --deep --strict build/WBWriter.app
+          spctl --assess --type execute -vv build/WBWriter.app
+          xcrun stapler validate "build/WBWriter-$VERSION.dmg"
 
       - name: Publish GitHub release
         env:
@@ -53,12 +54,12 @@ jobs:
           VERSION="${RELEASE_TAG#v}"
           NOTES=".github/release-notes/$RELEASE_TAG.md"
           ASSETS=()
-          for f in build/WBWrite-$VERSION.dmg build/WBWrite-$VERSION.zip build/WBWrite-$VERSION.pkg; do
+          for f in build/WBWriter-$VERSION.dmg build/WBWriter-$VERSION.zip build/WBWriter-$VERSION.pkg; do
             [[ -f "$f" ]] && ASSETS+=("$f")
           done
           if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
             gh release upload "$RELEASE_TAG" "${ASSETS[@]}" --clobber
           else
             if [[ -f "$NOTES" ]]; then NOTE_ARGS=(--notes-file "$NOTES"); else NOTE_ARGS=(--generate-notes); fi
-            gh release create "$RELEASE_TAG" "${ASSETS[@]}" --title "WBWrite $VERSION" "${NOTE_ARGS[@]}" --latest
+            gh release create "$RELEASE_TAG" "${ASSETS[@]}" --title "WBWriter $VERSION" "${NOTE_ARGS[@]}" --latest
           fi

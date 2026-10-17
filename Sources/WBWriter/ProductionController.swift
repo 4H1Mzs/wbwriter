@@ -46,7 +46,7 @@ final class ProductionController {
                 throw ProductionError(errorDescription: "NDI runtime could not be initialised on this Mac.")
             }
             let name = settings.ndiName.trimmingCharacters(in: .whitespaces)
-            guard let s = NDISender(name: name.isEmpty ? "WBWrite" : name, canvas: canvas, frameRate: settings.frameRate) else {
+            guard let s = NDISender(name: name.isEmpty ? "WBWriter" : name, canvas: canvas, frameRate: settings.frameRate) else {
                 throw ProductionError(errorDescription: "Could not create the NDI output.")
             }
             sender = s
@@ -124,7 +124,7 @@ final class ProductionController {
         }
         activity = ProcessInfo.processInfo.beginActivity(
             options: [.idleDisplaySleepDisabled, .idleSystemSleepDisabled, .userInitiated, .latencyCritical],
-            reason: "WBWrite is live")
+            reason: "WBWriter is live")
 
         shownVersion = 0
         let t = Timer(timeInterval: 1.0 / 60.0, repeats: true) { [weak self] _ in self?.refresh() }

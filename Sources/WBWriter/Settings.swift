@@ -91,13 +91,14 @@ final class AppSettings: ObservableObject {
     @Published var errorMessage: String?
 
     init() {
+        Self.importSettingsFromWBWrite()
         let d = UserDefaults.standard
         d.register(defaults: [
             "outputWidth": 1920,
             "outputHeight": 1080,
             "frameRate": "30",
             "ndiEnabled": true,
-            "ndiName": "WBWrite",
+            "ndiName": "WBWriter",
             "background": BackgroundMode.black.rawValue,
             "penWidth": defaultPenWidth,
             "boardDisplay": 0,
@@ -111,7 +112,7 @@ final class AppSettings: ObservableObject {
         outputHeight = d.integer(forKey: "outputHeight")
         frameRateLabel = d.string(forKey: "frameRate") ?? "30"
         ndiEnabled = d.bool(forKey: "ndiEnabled")
-        ndiName = d.string(forKey: "ndiName") ?? "WBWrite"
+        ndiName = d.string(forKey: "ndiName") ?? "WBWriter"
         background = BackgroundMode(rawValue: d.string(forKey: "background") ?? "") ?? .black
         penWidth = d.double(forKey: "penWidth")
         boardDisplayID = d.integer(forKey: "boardDisplay")
@@ -124,6 +125,22 @@ final class AppSettings: ObservableObject {
             penColor = Color(.sRGB, red: c[0], green: c[1], blue: c[2])
         } else {
             penColor = .white
+        }
+    }
+
+    /// One-time import of settings saved by the app under its former name (WBWrite).
+    private static func importSettingsFromWBWrite() {
+        let d = UserDefaults.standard
+        guard !d.bool(forKey: "importedLegacySettings") else { return }
+        d.set(true, forKey: "importedLegacySettings")
+        guard let legacy = UserDefaults(suiteName: "com.cechacek.wbwrite") else { return }
+        let keys = ["outputWidth", "outputHeight", "frameRate", "ndiEnabled", "ndiName", "background",
+                    "penColor", "penWidth", "boardDisplay", "outputDisplay", "boardPadding",
+                    "clearCorner", "clearGesture", "hideCursor"]
+        for key in keys where d.object(forKey: key) == nil {
+            guard var value = legacy.object(forKey: key) else { continue }
+            if key == "ndiName", value as? String == "WBWrite" { value = "WBWriter" }
+            d.set(value, forKey: key)
         }
     }
 

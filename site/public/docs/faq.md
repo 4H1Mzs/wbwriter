@@ -1,10 +1,10 @@
-# WBWrite FAQ and troubleshooting
+# WBWriter FAQ and troubleshooting
 
-> Answers to common questions about WBWrite, the free, open-source stage whiteboard for macOS with NDI® and HDMI output.
+> Answers to common questions about WBWriter, the free, open-source stage whiteboard for macOS with NDI® and HDMI output.
 
-## Is WBWrite free?
+## Is WBWriter free?
 
-Yes. WBWrite is free and open source. It's made by 4H1M, z.s., a Czech nonprofit. If it helps your show, you can support 4H1M at https://www.darujme.cz/4h1m.
+Yes. WBWriter is free and open source. It's made by 4H1M, z.s., a Czech nonprofit. If it helps your show, you can support 4H1M at https://www.darujme.cz/4h1m.
 
 ## Which platforms are supported?
 
@@ -12,14 +12,14 @@ macOS 13 or later, on Apple Silicon and Intel. Windows and Linux builds are comi
 
 ## The NDI source doesn't appear on my receiver.
 
-- Open **System Settings → Privacy & Security → Local Network** and make sure WBWrite is turned on.
+- Open **System Settings → Privacy & Security → Local Network** and make sure WBWriter is turned on.
 - Check that the Mac and the receiver are on the same network and subnet.
 - Check that multicast and mDNS (Bonjour) aren't blocked by the network switch or firewall.
-- Look at the status line on the touchscreen. `NDI waiting` means WBWrite is sending and no receiver has connected yet.
+- Look at the status line on the touchscreen. `NDI waiting` means WBWriter is sending and no receiver has connected yet.
 
 ## Can I key the writing over other graphics?
 
-Yes. Set **Background** to *Transparent*. WBWrite then sends BGRA with straight alpha, so the receiver can key out everything except the writing.
+Yes. Set **Background** to *Transparent*. WBWriter then sends BGRA with straight alpha, so the receiver can key out everything except the writing.
 
 ## What does the performer see compared with the audience?
 

@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="Assets/logo-wordmark-dark.png">
-    <img src="Assets/logo-wordmark.png" alt="WBWrite" width="420">
+    <img src="Assets/logo-wordmark.png" alt="WBWriter" width="420">
   </picture>
 </p>
 
@@ -31,12 +31,12 @@
 ---
 
 <p align="center">
-  <img src="Assets/screenshots/board.png" width="860" alt="WBWrite live board on the touchscreen">
+  <img src="Assets/screenshots/board.png" width="860" alt="WBWriter live board on the touchscreen">
 </p>
 
 ## What it does
 
-WBWrite is a stripped-down, show-safe take on [OpenBoard](https://openboard.ch/en/download). You set everything up before the show. Live mode has no toolbars, palettes or menus. There's only the board.
+WBWriter is a stripped-down, show-safe take on [OpenBoard](https://openboard.ch/en/download). You set everything up before the show. Live mode has no toolbars, palettes or menus. There's only the board.
 
 - 🖊️ **One pen.** It's white by default, at OpenBoard's thickest default width. Color and width are set before the show and can't change during it.
 - 📐 **Aspect-locked board.** You enter your LED wall's resolution. The board fills the touchscreen, scaled to fit with the aspect ratio kept exactly. The area outside it is hatched so it's obvious where you can't draw, and the board stays clear of the MacBook camera notch.
@@ -66,11 +66,11 @@ WBWrite is a stripped-down, show-safe take on [OpenBoard](https://openboard.ch/e
 | **Windows** | 🚧 Coming soon |
 | **Linux** | 🚧 Coming soon |
 
-Open the `.dmg` and drag **WBWrite** into **Applications**.
+Open the `.dmg` and drag **WBWriter** into **Applications**.
 
 ## Quick start
 
-1. Open **WBWrite**. When macOS asks to let it find devices on your **local network**, click **Allow**. NDI can't work without this.
+1. Open **WBWriter**. When macOS asks to let it find devices on your **local network**, click **Allow**. NDI can't work without this.
 2. Set up the show:
    | Setting | Notes |
    |---|---|
@@ -102,7 +102,7 @@ Settings are saved between launches.
 
 Any NDI receiver works: vMix, OBS (DistroAV), Resolume, NDI Studio Monitor, TriCaster, disguise, and so on. The source is announced through Bonjour (`_ndi._tcp`). If it doesn't show up:
 
-- Check **System Settings → Privacy & Security → Local Network**. WBWrite must be enabled.
+- Check **System Settings → Privacy & Security → Local Network**. WBWriter must be enabled.
 - Check that the sender and the receiver are on the same subnet, and that multicast/mDNS isn't blocked.
 
 ## Building from source
@@ -121,13 +121,13 @@ scripts/build.sh       # universal, Developer ID–signed app + .zip + .dmg
 To notarize, store a notarytool profile once and pass it to the build:
 
 ```bash
-xcrun notarytool store-credentials WBWrite --apple-id "you@example.com" --team-id <TEAM_ID>
-NOTARY_PROFILE=WBWrite scripts/build.sh
+xcrun notarytool store-credentials WBWriter --apple-id "you@example.com" --team-id <TEAM_ID>
+NOTARY_PROFILE=WBWriter scripts/build.sh
 ```
 
 Other variables: `VERSION`, `BUILD`, `NDI_SDK`, `SIGN_ID`, `INSTALLER_ID`.
 
-`WBWrite --selftest` goes live right away and draws a test stroke. It's useful for checking NDI or HDMI routing without touching the screen.
+`WBWriter --selftest` goes live right away and draws a test stroke. It's useful for checking NDI or HDMI routing without touching the screen.
 
 ### Releases
 
@@ -142,7 +142,7 @@ The [wbwriter.app](https://wbwriter.app/) website is in [`site/`](site/). It's a
 ```
 Sources/
   CNDI/                       NDI SDK headers + module map (links libndi)
-  WBWrite/
+  WBWriter/
     main.swift                App delegate, menus, setup ↔ live switching
     Settings.swift            Persistent settings (UserDefaults)
     SetupView.swift           SwiftUI pre-show configuration window
@@ -175,9 +175,9 @@ Sources/
   </a>
 </p>
 
-WBWrite is developed by **4H1M, z.s.**, a Czech nonprofit audiovisual production serving churches and Christian events through sound, lighting, visuals, livestreaming and video. We build tools like this for our own productions and share them for free.
+WBWriter is developed by **4H1M, z.s.**, a Czech nonprofit audiovisual production serving churches and Christian events through sound, lighting, visuals, livestreaming and video. We build tools like this for our own productions and share them for free.
 
-If WBWrite helps your show, please consider supporting 4H1M's development and ministry:
+If WBWriter helps your show, please consider supporting 4H1M's development and ministry:
 
 <p align="center">
   <a href="https://www.darujme.cz/4h1m"><img alt="Support 4H1M" src="https://img.shields.io/badge/❤%20Support%204H1M-darujme.cz-4B1C7A?style=for-the-badge"></a>
@@ -189,7 +189,7 @@ If WBWrite helps your show, please consider supporting 4H1M's development and mi
 
 ## Credits
 
-- NDI® is a registered trademark of Vizrt NDI AB. WBWrite uses the NDI® SDK, and the bundled `libndi.dylib` is distributed under the NDI SDK license. See `Contents/Resources/libndi_licenses.txt` in the app bundle and [ndi.video](https://ndi.video).
+- NDI® is a registered trademark of Vizrt NDI AB. WBWriter uses the NDI® SDK, and the bundled `libndi.dylib` is distributed under the NDI SDK license. See `Contents/Resources/libndi_licenses.txt` in the app bundle and [ndi.video](https://ndi.video).
 - Inspired by [OpenBoard](https://openboard.ch).
 
 © 2026 4H1M, z.s.

@@ -143,7 +143,7 @@ struct SetupView: View {
                 .resizable()
                 .frame(width: 52, height: 52)
             VStack(alignment: .leading, spacing: 2) {
-                Text("WBWrite").font(.system(size: 22, weight: .bold))
+                Text("WBWriter").font(.system(size: 22, weight: .bold))
                 Text("Live whiteboard for stage → NDI / HDMI").font(.subheadline).foregroundStyle(.secondary)
             }
             Spacer()

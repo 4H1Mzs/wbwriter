@@ -45,7 +45,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
                                                                goLive: { [weak self] in self?.goLive() },
                                                                showAbout: { [weak self] in self?.showAbout() }))
             let window = NSWindow(contentViewController: host)
-            window.title = "WBWrite"
+            window.title = "WBWriter"
             window.styleMask = [.titled, .closable, .miniaturizable, .resizable]
             window.setContentSize(NSSize(width: 560, height: 820))
             window.isReleasedWhenClosed = false
@@ -91,7 +91,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     @objc func showAbout() {
         if aboutWindow == nil {
             let window = NSWindow(contentViewController: NSHostingController(rootView: AboutView()))
-            window.title = "About WBWrite"
+            window.title = "About WBWriter"
             window.styleMask = [.titled, .closable]
             window.isReleasedWhenClosed = false
             window.center()
@@ -108,11 +108,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 
         let appItem = NSMenuItem()
         let appMenu = NSMenu()
-        appMenu.addItem(withTitle: "About WBWrite", action: #selector(showAbout), keyEquivalent: "").target = self
+        appMenu.addItem(withTitle: "About WBWriter", action: #selector(showAbout), keyEquivalent: "").target = self
         appMenu.addItem(.separator())
-        appMenu.addItem(withTitle: "Hide WBWrite", action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
+        appMenu.addItem(withTitle: "Hide WBWriter", action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
         appMenu.addItem(.separator())
-        appMenu.addItem(withTitle: "Quit WBWrite", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        appMenu.addItem(withTitle: "Quit WBWriter", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         appItem.submenu = appMenu
         main.addItem(appItem)
 

@@ -1,12 +1,12 @@
-# WBWrite quick start
+# WBWriter quick start
 
-> How to install WBWrite on macOS, set it up for a show, and send the board to an LED wall over NDI® or HDMI.
+> How to install WBWriter on macOS, set it up for a show, and send the board to an LED wall over NDI® or HDMI.
 
 ## Install
 
 1. Download the latest `.dmg` from https://github.com/4H1Mzs/wbwriter/releases/latest.
-2. Open it and drag **WBWrite** into **Applications**.
-3. Open WBWrite. When macOS asks to let it find devices on your local network, click **Allow**. NDI can't work without this.
+2. Open it and drag **WBWriter** into **Applications**.
+3. Open WBWriter. When macOS asks to let it find devices on your local network, click **Allow**. NDI can't work without this.
 
 Requirements: macOS 13 or later, on Apple Silicon or Intel.
 
@@ -54,10 +54,10 @@ A small status line sits in a bottom corner of the touchscreen, only where it fi
 
 ## Receive the feed
 
-Any NDI receiver works, for example vMix, OBS with DistroAV, Resolume, NDI Studio Monitor, TriCaster or disguise. Look for the source named `MACHINE (WBWrite)`, or whatever name you set.
+Any NDI receiver works, for example vMix, OBS with DistroAV, Resolume, NDI Studio Monitor, TriCaster or disguise. Look for the source named `MACHINE (WBWriter)`, or whatever name you set.
 
 ## Test without touching the screen
 
-Run `/Applications/WBWrite.app/Contents/MacOS/WBWrite --selftest`. WBWrite goes live right away and draws a test stroke, which is useful for checking NDI or HDMI routing from the video desk.
+Run `/Applications/WBWriter.app/Contents/MacOS/WBWriter --selftest`. WBWriter goes live right away and draws a test stroke, which is useful for checking NDI or HDMI routing from the video desk.
 
 Support: simon@4h1m.com

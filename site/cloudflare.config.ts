@@ -1,6 +1,6 @@
 import { defineConfig } from "cf/config";
 
-// wbwriter.app: static marketing site for WBWrite, served as an assets-only Worker.
+// wbwriter.app: static marketing site for WBWriter, served as an assets-only Worker.
 export default defineConfig({
   accountId: "e36d835e50ed1d218b74e0360c270ec4",
   worker: {

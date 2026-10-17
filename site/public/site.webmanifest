@@ -1,6 +1,6 @@
 {
-  "name": "WBWrite",
-  "short_name": "WBWrite",
+  "name": "WBWriter",
+  "short_name": "WBWriter",
   "description": "Free, open-source live stage whiteboard with NDI and HDMI output.",
   "start_url": "/",
   "display": "browser",

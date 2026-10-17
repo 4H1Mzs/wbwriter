@@ -4,14 +4,14 @@ import PackageDescription
 let ndiLib = "/Library/NDI SDK for Apple/lib/macOS"
 
 let package = Package(
-    name: "WBWrite",
+    name: "WBWriter",
     platforms: [.macOS(.v13)],
     targets: [
         .systemLibrary(name: "CNDI", path: "Sources/CNDI"),
         .executableTarget(
-            name: "WBWrite",
+            name: "WBWriter",
             dependencies: ["CNDI"],
-            path: "Sources/WBWrite",
+            path: "Sources/WBWriter",
             linkerSettings: [
                 .unsafeFlags([
                     "-L", ndiLib,

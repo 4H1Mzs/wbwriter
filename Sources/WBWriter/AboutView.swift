@@ -29,7 +29,7 @@ struct AboutView: View {
                 Image(nsImage: NSApp.applicationIconImage)
                     .resizable()
                     .frame(width: 96, height: 96)
-                Text("WBWrite").font(.system(size: 26, weight: .bold))
+                Text("WBWriter").font(.system(size: 26, weight: .bold))
                 Text(version).font(.callout).foregroundStyle(.secondary)
                 Text("Live stage whiteboard → NDI® / HDMI")
                     .font(.callout).foregroundStyle(.secondary)
@@ -52,7 +52,7 @@ struct AboutView: View {
                     .buttonStyle(.plain)
                     .help("4h1m.com")
                 }
-                Text("4H1M, z.s. is a Czech nonprofit audiovisual production serving churches and Christian events through sound, lighting, visuals, livestreaming and video. WBWrite is free — if it helps your show, you can support 4H1M's development and ministry.")
+                Text("4H1M, z.s. is a Czech nonprofit audiovisual production serving churches and Christian events through sound, lighting, visuals, livestreaming and video. WBWriter is free — if it helps your show, you can support 4H1M's development and ministry.")
                     .font(.callout)
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
