@@ -65,6 +65,18 @@ enum ClearGesture: String, CaseIterable, Identifiable {
     }
 }
 
+enum CornerLogo: String, CaseIterable, Identifiable {
+    case fourH1M, custom, none
+    var id: String { rawValue }
+    var label: String {
+        switch self {
+        case .fourH1M: return "4H1M"
+        case .custom: return "Custom image"
+        case .none: return "None"
+        }
+    }
+}
+
 /// OpenBoard's largest default pen ("strong") is 8 px on a 1080p board.
 let defaultPenWidth: Double = 8
 
@@ -87,6 +99,7 @@ final class AppSettings: ObservableObject {
     @Published var clearCorner: ClearCorner { didSet { defaults.set(clearCorner.rawValue, forKey: "clearCorner") } }
     @Published var clearGesture: ClearGesture { didSet { defaults.set(clearGesture.rawValue, forKey: "clearGesture") } }
     @Published var hideCursor: Bool { didSet { defaults.set(hideCursor, forKey: "hideCursor") } }
+    @Published var cornerLogo: CornerLogo { didSet { defaults.set(cornerLogo.rawValue, forKey: "cornerLogo") } }
     @Published var checkForUpdates: Bool { didSet { defaults.set(checkForUpdates, forKey: "checkForUpdates") } }
     /// Last go-live failure, shown in the setup window (not persisted).
     @Published var errorMessage: String?
@@ -109,6 +122,7 @@ final class AppSettings: ObservableObject {
             "clearGesture": ClearGesture.singleTap.rawValue,
             "hideCursor": false,
             "checkForUpdates": true,
+            "cornerLogo": CornerLogo.fourH1M.rawValue,
         ])
         outputWidth = d.integer(forKey: "outputWidth")
         outputHeight = d.integer(forKey: "outputHeight")
@@ -124,6 +138,7 @@ final class AppSettings: ObservableObject {
         clearGesture = ClearGesture(rawValue: d.string(forKey: "clearGesture") ?? "") ?? .singleTap
         hideCursor = d.bool(forKey: "hideCursor")
         checkForUpdates = d.bool(forKey: "checkForUpdates")
+        cornerLogo = CornerLogo(rawValue: d.string(forKey: "cornerLogo") ?? "") ?? .fourH1M
         if let c = d.array(forKey: "penColor") as? [Double], c.count == 3 {
             penColor = Color(.sRGB, red: c[0], green: c[1], blue: c[2])
         } else {
@@ -144,6 +159,37 @@ final class AppSettings: ObservableObject {
             guard var value = legacy.object(forKey: key) else { continue }
             if key == "ndiName", value as? String == "WBWrite" { value = "WBWriter" }
             d.set(value, forKey: key)
+        }
+    }
+
+    /// Where a custom corner logo is kept, so it survives the original file being moved or deleted.
+    static var customLogoURL: URL {
+        let dir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent("WBWriter", isDirectory: true)
+        return dir.appendingPathComponent("corner-logo")
+    }
+
+    var hasCustomLogo: Bool { FileManager.default.fileExists(atPath: Self.customLogoURL.path) }
+
+    /// Copies the chosen image into Application Support and switches the corner logo to it.
+    func setCustomLogo(from source: URL) throws {
+        guard NSImage(contentsOf: source) != nil else {
+            throw ProductionError(errorDescription: "That file isn't an image WBWriter can read.")
+        }
+        let target = Self.customLogoURL
+        try FileManager.default.createDirectory(at: target.deletingLastPathComponent(), withIntermediateDirectories: true)
+        if FileManager.default.fileExists(atPath: target.path) { try FileManager.default.removeItem(at: target) }
+        try FileManager.default.copyItem(at: source, to: target)
+        objectWillChange.send()
+        cornerLogo = .custom
+    }
+
+    /// The image to show in the board's corner, or nil when the logo is turned off.
+    var cornerLogoImage: NSImage? {
+        switch cornerLogo {
+        case .fourH1M: return Bundle.main.image(forResource: "4h1m-logo-white")
+        case .custom: return NSImage(contentsOf: Self.customLogoURL)
+        case .none: return nil
         }
     }
 

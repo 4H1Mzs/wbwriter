@@ -254,3 +254,24 @@ final class ClearButton: NSView {
         armed = false
     }
 }
+
+/// A small, faint logo that lives in a corner of the touchscreen. It ignores touches and never reaches the outputs.
+final class CornerLogoView: NSImageView {
+    static let maxSize: CGFloat = 56
+
+    convenience init(image: NSImage) {
+        self.init(frame: .zero)
+        self.image = image
+        imageScaling = .scaleProportionallyUpOrDown
+        alphaValue = 0.2
+    }
+
+    override func hitTest(_ point: NSPoint) -> NSView? { nil }
+
+    /// Size that fits the image's aspect ratio inside a square of `side` points.
+    func fittedSize(side: CGFloat) -> NSSize {
+        guard let size = image?.size, size.width > 0, size.height > 0 else { return .zero }
+        let scale = side / max(size.width, size.height)
+        return NSSize(width: size.width * scale, height: size.height * scale)
+    }
+}

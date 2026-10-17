@@ -27,6 +27,7 @@ All settings are in the setup window and are saved between launches.
 | Margin | Space around the board on the touchscreen. |
 | Clear gesture | Single tap, double tap (safer), or none (no button). |
 | Clear button | Which corner of the touchscreen it sits in. |
+| Corner logo | A small, faint logo in the bottom-right corner of the touchscreen: 4H1M, your own image, or none. It's never sent to the outputs. |
 | Hide mouse cursor | Hides the pointer while live. |
 | HDMI output | An external display for a clean full-screen feed, or *None*. |
 

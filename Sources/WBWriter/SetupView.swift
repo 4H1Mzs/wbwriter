@@ -1,5 +1,6 @@
 import AppKit
 import SwiftUI
+import UniformTypeIdentifiers
 
 /// Keeps the display list current when monitors are plugged in or removed.
 final class ScreenList: ObservableObject {
@@ -116,6 +117,14 @@ struct SetupView: View {
                         ForEach(ClearCorner.allCases) { Text($0.label).tag($0) }
                     }
                     .disabled(settings.clearGesture == .none)
+                    Picker("Corner logo", selection: $settings.cornerLogo) {
+                        ForEach(CornerLogo.allCases) { Text($0.label).tag($0) }
+                    }
+                    if settings.cornerLogo == .custom {
+                        LabeledContent(settings.hasCustomLogo ? "Custom logo set" : "No image chosen yet") {
+                            Button("Choose Image…", action: chooseLogo)
+                        }
+                    }
                     Toggle("Hide mouse cursor while live", isOn: $settings.hideCursor)
                 }
 
@@ -143,6 +152,19 @@ struct SetupView: View {
             footer
         }
         .frame(minWidth: 520, idealWidth: 560, minHeight: 640, idealHeight: 820)
+    }
+
+    private func chooseLogo() {
+        let panel = NSOpenPanel()
+        panel.allowedContentTypes = [.image]
+        panel.allowsMultipleSelection = false
+        panel.message = "Choose a logo for the corner of the touchscreen. A white or light logo on a transparent background works best."
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+        do {
+            try settings.setCustomLogo(from: url)
+        } catch {
+            settings.errorMessage = error.localizedDescription
+        }
     }
 
     private var header: some View {

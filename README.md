@@ -84,6 +84,7 @@ Open the `.dmg` and drag **WBWriter** into **Applications**.
    | Board display | Which screen is the touchscreen. |
    | Margin | Space around the board on the touchscreen. |
    | Clear gesture / button | Single tap, double tap, or none (no button), and which corner. |
+   | Corner logo | A small, faint logo in the bottom-right corner of the touchscreen: 4H1M, your own image, or none. |
    | HDMI output | An external display for a clean feed, or *None*. |
 3. Click **Go Live** (or press Return).
 4. Write. To leave live mode, press **Esc**. **Backspace** also clears the board, for an operator at a keyboard.

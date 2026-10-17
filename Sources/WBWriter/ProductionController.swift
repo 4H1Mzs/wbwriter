@@ -24,6 +24,7 @@ final class ProductionController {
     private var statusMonitor: StatusMonitor?
     private var statusTimer: Timer?
     private var clearButton: ClearButton?
+    private var cornerLogo: CornerLogoView?
 
     init(canvas: Canvas, settings: AppSettings, onExit: @escaping () -> Void) {
         self.canvas = canvas
@@ -88,12 +89,21 @@ final class ProductionController {
             clearButton = button
         }
 
+        if let image = settings.cornerLogoImage {
+            let logo = CornerLogoView(image: image)
+            container.addSubview(logo)
+            cornerLogo = logo
+        }
+
         let label = StatusLabel()
         container.addSubview(label)
         statusLabel = label
         statusMonitor = StatusMonitor(width: canvas.width, height: canvas.height, frameRate: settings.frameRate,
                                       sender: sender, ndiEnabled: settings.ndiEnabled)
-        board.onLayout = { [weak self] in self?.placeStatus() }
+        board.onLayout = { [weak self] in
+            self?.placeCornerLogo()
+            self?.placeStatus()
+        }
 
         window.contentView = container
         window.onEscape = { [weak self] in self?.exit() }
@@ -144,6 +154,36 @@ final class ProductionController {
         placeStatus()
     }
 
+    /// Bottom-right corner of the screen. When the clear button sits there, the logo goes just above
+    /// it, or beside it if the board leaves no room above. Shrinks to stay off the board and the
+    /// button, and hides when even a small logo wouldn't fit.
+    private func placeCornerLogo() {
+        guard let logo = cornerLogo, let board = boardView, let container = logo.superview else { return }
+        let b = container.bounds, r = board.framedBoardRect
+        let m: CGFloat = 18, gap: CGFloat = 12
+        let button = settings.clearCorner == .bottomRight ? clearButton?.frame : nil
+        let blocked = [r, button].compactMap { $0 }
+
+        for side in stride(from: CornerLogoView.maxSize, through: 24, by: -4) {
+            let size = logo.fittedSize(side: side)
+            var spots = [CGRect(x: b.maxX - m - size.width, y: b.minY + m, width: size.width, height: size.height)]
+            if let button {
+                spots = [
+                    CGRect(x: button.maxX - size.width, y: button.maxY + gap, width: size.width, height: size.height),
+                    CGRect(x: button.minX - gap - size.width, y: b.minY + m, width: size.width, height: size.height),
+                ]
+            }
+            if let spot = spots.first(where: { spot in
+                b.contains(spot) && blocked.allSatisfy { !$0.intersects(spot.insetBy(dx: -4, dy: -4)) }
+            }) {
+                logo.frame = spot.integral
+                logo.isHidden = false
+                return
+            }
+        }
+        logo.isHidden = true
+    }
+
     /// Keeps the status line visible outside the board: below it on one line if it fits, otherwise
     /// wrapped onto more lines in the free margin beside the board. As a last resort it sits at the
     /// bottom of the screen even if it touches the board edge.
@@ -151,7 +191,8 @@ final class ProductionController {
         guard let label = statusLabel, let board = boardView, let container = label.superview else { return }
         let b = container.bounds
         let r = board.framedBoardRect
-        let blocked = [r, clearButton?.frame].compactMap { $0 }
+        let logoFrame = cornerLogo.flatMap { $0.isHidden ? nil : $0.frame }
+        let blocked = [r, clearButton?.frame, logoFrame].compactMap { $0 }
         let mx: CGFloat = 12, my: CGFloat = 6
 
         func fits(_ spot: CGRect) -> Bool {
@@ -216,6 +257,7 @@ final class ProductionController {
         statusMonitor = nil
         statusLabel = nil
         clearButton = nil
+        cornerLogo = nil
         sender?.stop()
         sender = nil
         boardWindow?.orderOut(nil)
