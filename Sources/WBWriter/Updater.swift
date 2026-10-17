@@ -61,7 +61,7 @@ final class Updater: ObservableObject {
     // MARK: Checking
 
     func check(userInitiated: Bool) {
-        var request = URLRequest(url: Self.latestURL, timeoutInterval: 15)
+        var request = URLRequest(url: Self.latestURL, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 15)
         request.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
         request.setValue("WBWriter/\(AppVersion.current)", forHTTPHeaderField: "User-Agent")
         URLSession.shared.dataTask(with: request) { data, response, _ in
