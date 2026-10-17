@@ -51,7 +51,7 @@ final class BoardView: NSView {
     var onLayout: (() -> Void)?
     private var boardRect: CGRect = .zero
     private var drawing = false
-    private let borderWidth: CGFloat = 3
+    private let borderWidth: CGFloat = 2
 
     init(canvas: Canvas, padding: CGFloat) {
         self.canvas = canvas
@@ -61,7 +61,7 @@ final class BoardView: NSView {
         layer?.backgroundColor = Self.hatchPattern().cgColor
 
         frameLayer.backgroundColor = NSColor.black.cgColor
-        frameLayer.borderColor = NSColor(white: 1, alpha: 0.12).cgColor
+        frameLayer.borderColor = NSColor(white: 0.12, alpha: 1).cgColor
         frameLayer.borderWidth = borderWidth
         contentLayer.contentsGravity = .resize
         contentLayer.magnificationFilter = .linear
@@ -74,18 +74,17 @@ final class BoardView: NSView {
 
     /// Dark diagonal hatching that marks the area outside the board as not drawable.
     private static func hatchPattern() -> NSColor {
-        let tile: CGFloat = 32
+        let tile: CGFloat = 24
         let image = NSImage(size: NSSize(width: tile, height: tile), flipped: false) { rect in
-            NSColor(white: 0.05, alpha: 1).setFill()
+            NSColor(white: 0.02, alpha: 1).setFill()
             rect.fill()
             let path = NSBezierPath()
-            // Two segments so the stripes join seamlessly across tiles.
-            let o: CGFloat = 8 // overdraw so wide stripes join seamlessly across tiles
+            let o: CGFloat = 4 // overdraw so the stripes join seamlessly across tiles
             path.move(to: NSPoint(x: -o, y: o)); path.line(to: NSPoint(x: o, y: -o))
             path.move(to: NSPoint(x: -o, y: tile + o)); path.line(to: NSPoint(x: tile + o, y: -o))
             path.move(to: NSPoint(x: tile - o, y: tile + o)); path.line(to: NSPoint(x: tile + o, y: tile - o))
-            path.lineWidth = 9
-            NSColor(white: 1, alpha: 0.006).setStroke()
+            path.lineWidth = 3
+            NSColor(white: 0.035, alpha: 1).setStroke()
             path.stroke()
             return true
         }
