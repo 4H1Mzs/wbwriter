@@ -5,7 +5,7 @@
 - Website: https://wbwriter.app/
 - Download (macOS 13+, Apple Silicon and Intel, signed and notarized): https://github.com/4H1Mzs/wbwriter/releases/latest
 - Source code: https://github.com/4H1Mzs/wbwriter
-- Current version: 1.5.0
+- Current version: 1.6.0
 - Price: free
 - License: MIT (open source)
 - Support: simon@4h1m.com
@@ -114,7 +114,7 @@ All settings are in the setup window and are saved between launches.
 | Clear button | Which corner of the touchscreen it sits in. |
 | Corner logo | A small, faint logo in the bottom-right corner of the touchscreen: 4H1M, your own image, or none. It's never sent to the outputs. |
 | Hide mouse cursor | Hides the pointer while live. |
-| HDMI output | An external display for a clean full-screen feed, or *None*. |
+| HDMI output | An external display for a clean full-screen feed, a hidden *Window for screen capture*, or *None*. |
 | Web control | Off by default. When on, it shows the address to open on a phone, with an optional port and PIN. |
 
 ## Go live
@@ -170,6 +170,10 @@ NDI re-sends the whole picture every frame, and a board full of writing costs fa
 
 The setup window estimates the saving, and **TX** in the status line shows the real network load. Ethernet is still the most reliable option for big boards.
 
+### Send NDI HX with a screen-capture app
+
+For much lower bandwidth, an NDI HX (H.264) feed can come from a screen-capture app such as **NDI ScreenCapture HX** (Mac App Store, by Sienna). Set **HDMI output** to *Window for screen capture*. WBWriter then opens a hidden window called **WBWriter Output** that shows the clean feed at the exact output resolution, and the capture app sends that window as NDI HX. The window works even while it's covered by the board. You can turn off WBWriter's own NDI output to save CPU.
+
 ## Receive the feed
 
 Any NDI receiver works, for example vMix, OBS with DistroAV, Resolume, NDI Studio Monitor, TriCaster or disguise. Look for the source named `MACHINE (WBWriter)`, or whatever name you set.
@@ -206,6 +210,10 @@ macOS 13 or later, on Apple Silicon and Intel. Windows and Linux builds are comi
 ## The NDI feed drops out over Wi-Fi.
 
 A big board at a high frame rate can use more than 100 Mb/s while there's writing on it. In the setup window, set **Send** to *Only when the board changes*, lower **Max frame rate while writing**, and lower **Resolution over NDI**. The quick start explains each option. Ethernet is the most reliable fix.
+
+## Can WBWriter send NDI HX?
+
+Not by itself yet. You can get an NDI HX feed today with a screen-capture app such as NDI ScreenCapture HX: set **HDMI output** to *Window for screen capture* and capture the window **WBWriter Output**. It shows the clean feed at the exact output resolution, even while it's hidden behind the board.
 
 ## Can I key the writing over other graphics?
 

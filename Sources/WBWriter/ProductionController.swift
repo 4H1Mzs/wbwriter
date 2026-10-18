@@ -13,7 +13,7 @@ final class ProductionController {
 
     private var boardWindow: ProductionWindow?
     private var boardView: BoardView?
-    private var outputWindow: ProductionWindow?
+    private var outputWindow: NSWindow?
     private var outputView: OutputView?
     private var sender: NDISender?
     private var timer: Timer?
@@ -81,8 +81,9 @@ final class ProductionController {
 
     private func screens() throws -> (board: NSScreen, output: NSScreen?) {
         let boardScreen = NSScreen.with(displayID: settings.boardDisplayID) ?? NSScreen.main ?? NSScreen.screens[0]
-        let outputScreen = settings.outputDisplayID == 0 ? nil : NSScreen.with(displayID: settings.outputDisplayID)
-        if settings.outputDisplayID != 0 && outputScreen == nil {
+        let usesScreen = settings.outputDisplayID != 0 && settings.outputDisplayID != AppSettings.captureWindowID
+        let outputScreen = usesScreen ? NSScreen.with(displayID: settings.outputDisplayID) : nil
+        if usesScreen && outputScreen == nil {
             throw ProductionError(errorDescription: "The selected HDMI output display is not connected.")
         }
         if let outputScreen, outputScreen == boardScreen {
@@ -154,6 +155,15 @@ final class ProductionController {
             let view = OutputView(frame: NSRect(origin: .zero, size: outputScreen.frame.size))
             out.contentView = view
             out.orderFrontRegardless()
+            outputWindow = out
+            outputView = view
+        } else if settings.outputDisplayID == AppSettings.captureWindowID {
+            // Window for screen-capture apps, kept behind the board on the same screen.
+            let out = CaptureWindow(pixelSize: CGSize(width: canvas.width, height: canvas.height), on: boardScreen)
+            let view = OutputView(frame: NSRect(origin: .zero, size: out.frame.size))
+            out.contentView = view
+            out.level = .normal
+            out.orderBack(nil)
             outputWindow = out
             outputView = view
         }

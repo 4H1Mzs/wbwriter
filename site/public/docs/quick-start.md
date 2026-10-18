@@ -34,7 +34,7 @@ All settings are in the setup window and are saved between launches.
 | Clear button | Which corner of the touchscreen it sits in. |
 | Corner logo | A small, faint logo in the bottom-right corner of the touchscreen: 4H1M, your own image, or none. It's never sent to the outputs. |
 | Hide mouse cursor | Hides the pointer while live. |
-| HDMI output | An external display for a clean full-screen feed, or *None*. |
+| HDMI output | An external display for a clean full-screen feed, a hidden *Window for screen capture*, or *None*. |
 | Web control | Off by default. When on, it shows the address to open on a phone, with an optional port and PIN. |
 
 ## Go live
@@ -89,6 +89,10 @@ NDI re-sends the whole picture every frame, and a board full of writing costs fa
 - Lower **Resolution over NDI**. 50 % needs about a quarter of the bandwidth. White strokes on black only soften slightly.
 
 The setup window estimates the saving, and **TX** in the status line shows the real network load. Ethernet is still the most reliable option for big boards.
+
+### Send NDI HX with a screen-capture app
+
+For much lower bandwidth, an NDI HX (H.264) feed can come from a screen-capture app such as **NDI ScreenCapture HX** (Mac App Store, by Sienna). Set **HDMI output** to *Window for screen capture*. WBWriter then opens a hidden window called **WBWriter Output** that shows the clean feed at the exact output resolution, and the capture app sends that window as NDI HX. The window works even while it's covered by the board. You can turn off WBWriter's own NDI output to save CPU.
 
 ## Receive the feed
 

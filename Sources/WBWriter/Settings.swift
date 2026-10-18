@@ -129,7 +129,9 @@ final class AppSettings: ObservableObject {
     /// Pen width in pixels on a 1080-line output; scaled with output height.
     @Published var penWidth: Double { didSet { defaults.set(penWidth, forKey: "penWidth") } }
     @Published var boardDisplayID: Int { didSet { defaults.set(boardDisplayID, forKey: "boardDisplay") } }
+    /// 0 = no HDMI output, `captureWindowID` = a window for screen-capture apps, otherwise a display ID.
     @Published var outputDisplayID: Int { didSet { defaults.set(outputDisplayID, forKey: "outputDisplay") } }
+    static let captureWindowID = -1
     @Published var boardPadding: Double { didSet { defaults.set(boardPadding, forKey: "boardPadding") } }
     @Published var clearCorner: ClearCorner { didSet { defaults.set(clearCorner.rawValue, forKey: "clearCorner") } }
     @Published var clearGesture: ClearGesture { didSet { defaults.set(clearGesture.rawValue, forKey: "clearGesture") } }

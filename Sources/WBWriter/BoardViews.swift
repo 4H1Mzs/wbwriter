@@ -291,3 +291,27 @@ final class CornerLogoView: NSImageView {
         return NSSize(width: size.width * scale, height: size.height * scale)
     }
 }
+
+/// A plain window showing the clean output pixel for pixel, for screen-capture apps such as
+/// NDI ScreenCapture HX. It can sit behind the board: window capture works on covered windows.
+final class CaptureWindow: NSWindow {
+    static let title = "WBWriter Output"
+
+    init(pixelSize: CGSize, on screen: NSScreen) {
+        let scale = screen.backingScaleFactor
+        let size = NSSize(width: pixelSize.width / scale, height: pixelSize.height / scale)
+        super.init(contentRect: NSRect(origin: screen.frame.origin, size: size),
+                   styleMask: .borderless, backing: .buffered, defer: false)
+        title = Self.title
+        isReleasedWhenClosed = false
+        backgroundColor = .black
+        isOpaque = true
+        hasShadow = false
+        ignoresMouseEvents = true
+        collectionBehavior = [.canJoinAllSpaces, .stationary, .ignoresCycle, .fullScreenNone]
+        setFrameOrigin(screen.frame.origin)
+    }
+
+    // Keep the exact pixel size even when it's larger than the screen.
+    override func constrainFrameRect(_ frameRect: NSRect, to screen: NSScreen?) -> NSRect { frameRect }
+}

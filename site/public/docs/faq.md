@@ -21,6 +21,10 @@ macOS 13 or later, on Apple Silicon and Intel. Windows and Linux builds are comi
 
 A big board at a high frame rate can use more than 100 Mb/s while there's writing on it. In the setup window, set **Send** to *Only when the board changes*, lower **Max frame rate while writing**, and lower **Resolution over NDI**. The quick start explains each option. Ethernet is the most reliable fix.
 
+## Can WBWriter send NDI HX?
+
+Not by itself yet. You can get an NDI HX feed today with a screen-capture app such as NDI ScreenCapture HX: set **HDMI output** to *Window for screen capture* and capture the window **WBWriter Output**. It shows the clean feed at the exact output resolution, even while it's hidden behind the board.
+
 ## Can I key the writing over other graphics?
 
 Yes. Set **Background** to *Transparent*. WBWriter then sends BGRA with straight alpha, so the receiver can key out everything except the writing.

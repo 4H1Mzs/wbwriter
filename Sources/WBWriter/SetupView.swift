@@ -166,12 +166,13 @@ struct SetupView: View {
                 Section {
                     Picker("Display", selection: $settings.outputDisplayID) {
                         Text("None").tag(0)
+                        Text("Window for screen capture (“WBWriter Output”)").tag(AppSettings.captureWindowID)
                         ForEach(screens.screens, id: \.displayID) { Text($0.label).tag($0.displayID) }
                     }
                 } header: {
                     Text("HDMI output")
                 } footer: {
-                    Text("Full-screen clean feed of the board content on an external display. Leave on “None” for NDI only.")
+                    Text("Full-screen clean feed of the board content on an external display. “Window for screen capture” opens a hidden window with the clean feed at the exact output resolution, for apps such as NDI ScreenCapture HX. Leave on “None” for NDI only.")
                         .font(.caption).foregroundStyle(.secondary)
                 }
 
