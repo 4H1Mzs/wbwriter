@@ -39,6 +39,10 @@ Set **Clear gesture** to *Double tap*, or to *None* to hide the button entirely.
 
 No. Pen color and width are set in the setup window before the show, so nothing can change by accident in live mode.
 
+## The touchscreen shows the board wrongly, or WBWriter misbehaves.
+
+With **Web control** turned on, open the remote page on a phone. **Refresh display** rebuilds the touchscreen and HDMI windows without interrupting NDI or losing the writing. If that doesn't help, **Restart WBWriter** (tap twice): the app restarts and returns live with the same board and message.
+
 ## How do I update WBWriter?
 
 WBWriter checks for a new version each time it starts and shows the changelog when one is available. Click **Install and Restart**: it downloads the update, checks that it's signed by 4H1M, replaces the app and opens it again. You can also choose **WBWriter → Check for Updates…** at any time, or turn off the automatic check under **Updates** in the setup window. The check never interrupts live mode.
@@ -47,4 +51,4 @@ WBWriter checks for a new version each time it starts and shows the changelog wh
 
 Open an issue at https://github.com/4H1Mzs/wbwriter/issues, or email simon@4h1m.com.
 
-NDI® is a registered trademark of Vizrt NDI AB.
+NDI® is a registered trademark of Vizrt NDI AB. Learn more at https://ndi.video/.

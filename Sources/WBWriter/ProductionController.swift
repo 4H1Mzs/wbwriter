@@ -27,6 +27,8 @@ final class ProductionController {
     private var cornerLogo: CornerLogoView?
     private var messageLabel: MessageLabel?
     private var messageTimer: Timer?
+    /// When this live session started.
+    let startedAt = Date()
     /// The remote message currently on the touchscreen, if any.
     private(set) var message: String?
 
@@ -37,15 +39,8 @@ final class ProductionController {
     }
 
     func start() throws {
-        let boardScreen = NSScreen.with(displayID: settings.boardDisplayID) ?? NSScreen.main ?? NSScreen.screens[0]
-        let outputScreen = settings.outputDisplayID == 0 ? nil : NSScreen.with(displayID: settings.outputDisplayID)
-        if settings.outputDisplayID != 0 && outputScreen == nil {
-            throw ProductionError(errorDescription: "The selected HDMI output display is not connected.")
-        }
-        if let outputScreen, outputScreen == boardScreen {
-            throw ProductionError(errorDescription: "The HDMI output display must be different from the board display.")
-        }
-
+        // Validate displays before anything goes on air.
+        _ = try screens()
         if settings.ndiEnabled {
             guard NDI.isAvailable else {
                 throw ProductionError(errorDescription: "NDI runtime could not be initialised on this Mac.")
@@ -62,6 +57,44 @@ final class ProductionController {
         canvas.penColor = settings.penCGColor
         canvas.penWidth = settings.effectivePenWidth
 
+        try buildWindows()
+
+        if settings.hideCursor {
+            NSCursor.hide()
+            cursorHidden = true
+        }
+        activity = ProcessInfo.processInfo.beginActivity(
+            options: [.idleDisplaySleepDisabled, .idleSystemSleepDisabled, .userInitiated, .latencyCritical],
+            reason: "WBWriter is live")
+
+        shownVersion = 0
+        let t = Timer(timeInterval: 1.0 / 60.0, repeats: true) { [weak self] _ in self?.refresh() }
+        RunLoop.main.add(t, forMode: .common)
+        timer = t
+        refresh()
+
+        updateStatus()
+        let st = Timer(timeInterval: 1, repeats: true) { [weak self] _ in self?.updateStatus() }
+        RunLoop.main.add(st, forMode: .common)
+        statusTimer = st
+    }
+
+    private func screens() throws -> (board: NSScreen, output: NSScreen?) {
+        let boardScreen = NSScreen.with(displayID: settings.boardDisplayID) ?? NSScreen.main ?? NSScreen.screens[0]
+        let outputScreen = settings.outputDisplayID == 0 ? nil : NSScreen.with(displayID: settings.outputDisplayID)
+        if settings.outputDisplayID != 0 && outputScreen == nil {
+            throw ProductionError(errorDescription: "The selected HDMI output display is not connected.")
+        }
+        if let outputScreen, outputScreen == boardScreen {
+            throw ProductionError(errorDescription: "The HDMI output display must be different from the board display.")
+        }
+
+        return (boardScreen, outputScreen)
+    }
+
+    /// Creates the board window (and the HDMI output window) from scratch.
+    private func buildWindows() throws {
+        let (boardScreen, outputScreen) = try screens()
         // Board on the touchscreen.
         let window = ProductionWindow(screen: boardScreen)
         window.level = .statusBar
@@ -129,25 +162,30 @@ final class ProductionController {
         window.makeKeyAndOrderFront(nil)
         window.makeFirstResponder(board)
         NSApp.activate(ignoringOtherApps: true)
+        if let message { attachMessageLabel(message) }
+    }
 
-        if settings.hideCursor {
-            NSCursor.hide()
-            cursorHidden = true
-        }
-        activity = ProcessInfo.processInfo.beginActivity(
-            options: [.idleDisplaySleepDisabled, .idleSystemSleepDisabled, .userInitiated, .latencyCritical],
-            reason: "WBWriter is live")
+    private func teardownWindows() {
+        boardWindow?.orderOut(nil)
+        outputWindow?.orderOut(nil)
+        boardWindow = nil
+        outputWindow = nil
+        boardView = nil
+        outputView = nil
+        statusLabel = nil
+        clearButton = nil
+        cornerLogo = nil
+        messageLabel = nil
+    }
 
+    /// Rebuilds the touchscreen and HDMI windows without touching the board, the message or NDI,
+    /// for when a display shows the board wrongly.
+    func refreshDisplay() throws {
+        teardownWindows()
+        try buildWindows()
         shownVersion = 0
-        let t = Timer(timeInterval: 1.0 / 60.0, repeats: true) { [weak self] _ in self?.refresh() }
-        RunLoop.main.add(t, forMode: .common)
-        timer = t
         refresh()
-
         updateStatus()
-        let st = Timer(timeInterval: 1, repeats: true) { [weak self] _ in self?.updateStatus() }
-        RunLoop.main.add(st, forMode: .common)
-        statusTimer = st
     }
 
     private func updateStatus() {
@@ -173,17 +211,21 @@ final class ProductionController {
     /// or for `seconds` when given.
     func showMessage(_ text: String, seconds: Double?) {
         clearMessage()
-        guard let container = boardView?.superview else { return }
-        let label = MessageLabel(text: text)
-        container.addSubview(label)
-        messageLabel = label
         message = text
-        layoutOverlays()
+        attachMessageLabel(text)
         if let seconds {
             let t = Timer(timeInterval: seconds, repeats: false) { [weak self] _ in self?.clearMessage() }
             RunLoop.main.add(t, forMode: .common)
             messageTimer = t
         }
+    }
+
+    private func attachMessageLabel(_ text: String) {
+        guard let container = boardView?.superview else { return }
+        let label = MessageLabel(text: text)
+        container.addSubview(label)
+        messageLabel = label
+        layoutOverlays()
     }
 
     func clearMessage() {

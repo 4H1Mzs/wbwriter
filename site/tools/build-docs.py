@@ -315,7 +315,7 @@ def page(slug: str, title: str, summary: str, body: str) -> str:
 </main>
 <footer><div class="wrap">
   <span>© 2026 4H1M, z.s. · <a href="/">wbwriter.app</a> · <a href="https://github.com/4H1Mzs/wbwriter">Open source on GitHub</a> · Support: <a href="mailto:simon@4h1m.com">simon@4h1m.com</a></span>
-  <span>NDI® is a registered trademark of Vizrt NDI AB.</span>
+  <span>NDI® is a registered trademark of Vizrt NDI AB. Learn more at <a href="https://ndi.video/">ndi.video</a>.</span>
 </div></footer>
 </body>
 </html>

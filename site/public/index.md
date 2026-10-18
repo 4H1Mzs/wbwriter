@@ -5,7 +5,7 @@
 - Website: https://wbwriter.app/
 - Download (macOS 13+, Apple Silicon and Intel, signed and notarized): https://github.com/4H1Mzs/wbwriter/releases/latest
 - Source code: https://github.com/4H1Mzs/wbwriter
-- Current version: 1.4.0
+- Current version: 1.5.0
 - Price: free
 - License: MIT (open source)
 - Support: simon@4h1m.com
@@ -74,4 +74,4 @@ swift run
 - [Quick start](https://wbwriter.app/docs/quick-start.md)
 - [FAQ and troubleshooting](https://wbwriter.app/docs/faq.md)
 
-NDI® is a registered trademark of Vizrt NDI AB.
+NDI® is a registered trademark of Vizrt NDI AB. Learn more at https://ndi.video/.

@@ -9,11 +9,17 @@ final class WebControlServer {
         var live: Bool
         var message: String?
         var ndi: String?
+        /// Seconds since WBWriter started, and since it last went live.
+        var appUptime: TimeInterval = 0
+        var liveFor: TimeInterval?
     }
 
     var onClear: () -> Bool = { false }
     var onMessage: (_ text: String, _ seconds: Double?) -> Bool = { _, _ in false }
     var onClearMessage: () -> Bool = { false }
+    var onRefreshDisplay: () -> Bool = { false }
+    /// Always accepted; the app restarts shortly after answering.
+    var onRestart: () -> Void = {}
     var state: () -> State = { State(live: false, message: nil, ndi: nil) }
     /// Called on the main queue when the listener stops unexpectedly, e.g. the port is in use.
     var onFailure: (String) -> Void = { _ in }
@@ -117,6 +123,8 @@ final class WebControlServer {
                 json["live"] = s.live
                 json["message"] = s.message ?? NSNull()
                 json["ndi"] = s.ndi ?? NSNull()
+                json["appUptime"] = Int(s.appUptime)
+                json["liveFor"] = s.liveFor.map { Int($0) } ?? NSNull()
             }
             return sendJSON(connection, status: 200, json)
 
@@ -143,6 +151,12 @@ final class WebControlServer {
                 ok = onMain { self.onMessage(String(text.prefix(500)), seconds) }
             case "/api/message/clear":
                 ok = onMain { self.onClearMessage() }
+            case "/api/refresh-display":
+                ok = onMain { self.onRefreshDisplay() }
+            case "/api/restart":
+                sendJSON(connection, status: 200, ["ok": true])
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { self.onRestart() }
+                return
             default:
                 return sendJSON(connection, status: 404, ["error": "Not found."])
             }
@@ -239,7 +253,9 @@ enum WebControlPage {
     .row { display:flex; gap:10px; flex-wrap:wrap; }
     .row > * { flex:1 1 140px; }
     .current { color:var(--warn); font-weight:600; min-height:1.5em; overflow-wrap:anywhere; }
-    .muted { color:var(--muted); font-size:.9rem; }
+    .muted { color:var(--muted); font-size:.9rem; margin:0; }
+    .clock { font: 600 1.6rem/1.2 ui-monospace, "SF Mono", Menlo, monospace; margin: 2px 0 0; font-variant-numeric: tabular-nums; }
+    .mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .78rem; overflow-wrap: anywhere; }
     #toast { position:fixed; left:50%; bottom:max(20px, env(safe-area-inset-bottom)); transform:translateX(-50%); background:#221a2b; border:1px solid var(--line); padding:10px 16px; border-radius:10px; opacity:0; transition:opacity .2s; pointer-events:none; }
     #toast.show { opacity:1; }
     :focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
@@ -253,6 +269,15 @@ enum WebControlPage {
         <h2>PIN</h2>
         <p class="muted">Enter the PIN shown in WBWriter's setup window.</p>
         <div class="row"><input id="pin" inputmode="numeric" autocomplete="off" placeholder="PIN"><button class="primary" id="pinSave">Unlock</button></div>
+      </section>
+
+      <section>
+        <h2>Uptime</h2>
+        <div class="row">
+          <div><p class="muted">WBWriter running</p><p class="clock" id="appUptime">–</p></div>
+          <div><p class="muted">Live for</p><p class="clock" id="liveFor">–</p></div>
+        </div>
+        <p class="muted mono" id="ndi"></p>
       </section>
 
       <section>
@@ -277,6 +302,14 @@ enum WebControlPage {
         <p class="muted">On screen now:</p>
         <p class="current" id="current">No message</p>
         <button id="remove">Remove message</button>
+      </section>
+      <section>
+        <h2>Recovery</h2>
+        <p class="muted">If the touchscreen shows the board wrongly, refresh the display. The writing stays. If WBWriter misbehaves, restart it: it comes back live with the same board and message.</p>
+        <div class="row">
+          <button id="refresh">Refresh display</button>
+          <button id="restart">Restart WBWriter</button>
+        </div>
       </section>
     </main>
     <div id="toast" role="status"></div>
@@ -303,8 +336,20 @@ enum WebControlPage {
           if (!s.authorized) { live.textContent = "Locked"; live.className = "pill"; return; }
           live.textContent = s.live ? "Live" : "Not live"; live.className = s.live ? "pill live" : "pill";
           $("current").textContent = s.message || "No message";
+          clocks = { app: s.appUptime, live: s.liveFor, at: Date.now() };
+          $("ndi").textContent = s.ndi || "";
+          tick();
         } catch (e) { $("live").textContent = "Offline"; $("live").className = "pill"; }
       }
+      let clocks = null;
+      const hms = (t) => { t = Math.max(0, Math.floor(t)); const h = Math.floor(t / 3600), m = Math.floor(t / 60) % 60, s = t % 60; return `${h}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`; };
+      function tick() {
+        if (!clocks) return;
+        const d = (Date.now() - clocks.at) / 1000;
+        $("appUptime").textContent = hms(clocks.app + d);
+        $("liveFor").textContent = clocks.live == null ? "Not live" : hms(clocks.live + d);
+      }
+      setInterval(tick, 1000);
       let armed = null;
       $("clear").addEventListener("click", async () => {
         const b = $("clear");
@@ -322,6 +367,18 @@ enum WebControlPage {
         if (await post("/api/message", { text, seconds: Number($("seconds").value) })) { toast("Message shown"); refresh(); }
       });
       $("remove").addEventListener("click", async () => { if (await post("/api/message/clear")) { toast("Message removed"); refresh(); } });
+      $("refresh").addEventListener("click", async () => { if (await post("/api/refresh-display")) toast("Display refreshed"); });
+      let restartArmed = null;
+      $("restart").addEventListener("click", async () => {
+        const b = $("restart");
+        if (!restartArmed) {
+          b.textContent = "Tap again to restart";
+          restartArmed = setTimeout(() => { restartArmed = null; b.textContent = "Restart WBWriter"; }, 2500);
+          return;
+        }
+        clearTimeout(restartArmed); restartArmed = null; b.textContent = "Restart WBWriter";
+        if (await post("/api/restart")) toast("Restarting… back in a few seconds");
+      });
       $("pinSave").addEventListener("click", () => { pin = $("pin").value.trim(); try { localStorage.setItem("wbwriter-pin", pin); } catch (e) {} refresh(); });
       refresh(); setInterval(refresh, 2000);
     })();

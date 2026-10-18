@@ -70,6 +70,10 @@ Turn on **Web control** in the setup window and open one of the addresses it sho
 - **Clear board:** tap twice to confirm.
 - **Message to the performer:** shown in yellow in the hatched area of the touchscreen, never on NDI or HDMI. It stays until you tap **Remove message**, or disappears after 10 seconds, 30 seconds or a minute.
 
+- **Uptime:** how long WBWriter has been running and how long it has been live, with the current NDI status and network load.
+- **Refresh display:** rebuilds the touchscreen and HDMI windows if a display shows the board wrongly. The writing, the message and NDI keep running.
+- **Restart WBWriter:** tap twice. The app restarts and comes back live with the same board and message.
+
 ![The WBWriter Remote page on a phone, with Clear board, a message field and Remove message](https://wbwriter.app/img/web-control-3ca9986a.webp)
 
 ![A message for the performer shown in yellow below the board on the touchscreen](https://wbwriter.app/img/board-message-226d19b7.webp)
@@ -95,3 +99,5 @@ Any NDI receiver works, for example vMix, OBS with DistroAV, Resolume, NDI Studi
 Run `/Applications/WBWriter.app/Contents/MacOS/WBWriter --selftest`. WBWriter goes live right away and draws a test stroke, which is useful for checking NDI or HDMI routing from the video desk.
 
 Support: simon@4h1m.com
+
+NDI® is a registered trademark of Vizrt NDI AB. Learn more at https://ndi.video/.

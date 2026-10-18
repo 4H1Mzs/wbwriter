@@ -95,6 +95,16 @@ final class Canvas {
         lastMid = nil
     }
 
+    /// Replaces the board with an image of the same size, e.g. when resuming after a restart.
+    func restore(from image: CGImage) {
+        lock.lock(); defer { lock.unlock() }
+        fillBackground()
+        ctx.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
+        lastPoint = nil
+        lastMid = nil
+        _version &+= 1
+    }
+
     // MARK: Readout
 
     func makeImage() -> CGImage? {

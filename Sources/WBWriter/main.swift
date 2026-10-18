@@ -9,6 +9,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     private var canvas: Canvas?
     private var aboutWindow: NSWindow?
     private let updater = Updater()
+    private let launchedAt = Date()
     private let webControl = WebControlServer()
     private var observers: Set<AnyCancellable> = []
 
@@ -20,6 +21,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         configureWebControl()
         let selfTest = CommandLine.arguments.contains("--selftest")
         if selfTest { runSelfTest() }
+        if CommandLine.arguments.contains("--resume") { resume() }
         if CommandLine.arguments.contains("--about") { showAbout() }
         if settings.checkForUpdates && !selfTest {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
@@ -49,13 +51,50 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         webControl.state = { [weak self] in
             WebControlServer.State(live: self?.production != nil,
                                    message: self?.production?.message,
-                                   ndi: self?.production?.statusText)
+                                   ndi: self?.production?.statusText,
+                                   appUptime: Date().timeIntervalSince(self?.launchedAt ?? Date()),
+                                   liveFor: self?.production.map { Date().timeIntervalSince($0.startedAt) })
         }
+        webControl.onRefreshDisplay = { [weak self] in self?.refreshDisplay() ?? false }
+        webControl.onRestart = { [weak self] in self?.restart() }
         webControl.onFailure = { [weak self] message in self?.settings.webControlStatus = message }
         Publishers.CombineLatest3(settings.$webControlEnabled, settings.$webControlPort, settings.$webControlPIN)
             .debounce(for: .milliseconds(400), scheduler: RunLoop.main)
             .sink { [weak self] enabled, port, pin in self?.applyWebControl(enabled: enabled, port: port, pin: pin) }
             .store(in: &observers)
+    }
+
+    // MARK: Recovery
+
+    /// Rebuilds the touchscreen and HDMI windows; the board, message and NDI keep running.
+    private func refreshDisplay() -> Bool {
+        guard let production else { return false }
+        do {
+            try production.refreshDisplay()
+            return true
+        } catch {
+            settings.errorMessage = error.localizedDescription
+            return false
+        }
+    }
+
+    /// Saves the board, message and live state, then relaunches and restores them.
+    private func restart() {
+        let state = ResumeState(live: production != nil, message: production?.message, savedAt: Date())
+        try? ResumeState.save(state, board: production != nil ? canvas?.makeImage() : nil)
+        production?.stop()
+        production = nil
+        Relauncher.relaunch(arguments: ["--resume"])
+    }
+
+    private func resume() {
+        guard let (state, board) = ResumeState.take(), state.live else { return }
+        goLive()
+        guard let production else { return }
+        if let board, let canvas, board.width == canvas.width, board.height == canvas.height {
+            canvas.restore(from: board)
+        }
+        if let message = state.message { production.showMessage(message, seconds: nil) }
     }
 
     private func applyWebControl(enabled: Bool, port: Int, pin: String) {

@@ -117,8 +117,11 @@ struct SetupView: View {
                 } header: {
                     Text("NDI")
                 } footer: {
-                    Text("Receivers will see “\(Host.current().localizedName ?? "MAC") (\(settings.ndiName))”. Only the inside of the board is sent.")
-                        .font(.caption).foregroundStyle(.secondary)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Receivers will see “\(Host.current().localizedName ?? "MAC") (\(settings.ndiName))”. Only the inside of the board is sent.")
+                        Link("About NDI® at ndi.video", destination: URL(string: "https://ndi.video/")!)
+                    }
+                    .font(.caption).foregroundStyle(.secondary)
                 }
 
                 Section("Pen") {

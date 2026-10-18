@@ -5,7 +5,7 @@
 - Website: https://wbwriter.app/
 - Download (macOS 13+, Apple Silicon and Intel, signed and notarized): https://github.com/4H1Mzs/wbwriter/releases/latest
 - Source code: https://github.com/4H1Mzs/wbwriter
-- Current version: 1.4.0
+- Current version: 1.5.0
 - Price: free
 - License: MIT (open source)
 - Support: simon@4h1m.com
@@ -74,7 +74,7 @@ swift run
 - [Quick start](https://wbwriter.app/docs/quick-start.md)
 - [FAQ and troubleshooting](https://wbwriter.app/docs/faq.md)
 
-NDI® is a registered trademark of Vizrt NDI AB.
+NDI® is a registered trademark of Vizrt NDI AB. Learn more at https://ndi.video/.
 
 ---
 
@@ -150,6 +150,10 @@ Turn on **Web control** in the setup window and open one of the addresses it sho
 - **Clear board:** tap twice to confirm.
 - **Message to the performer:** shown in yellow in the hatched area of the touchscreen, never on NDI or HDMI. It stays until you tap **Remove message**, or disappears after 10 seconds, 30 seconds or a minute.
 
+- **Uptime:** how long WBWriter has been running and how long it has been live, with the current NDI status and network load.
+- **Refresh display:** rebuilds the touchscreen and HDMI windows if a display shows the board wrongly. The writing, the message and NDI keep running.
+- **Restart WBWriter:** tap twice. The app restarts and comes back live with the same board and message.
+
 ![The WBWriter Remote page on a phone, with Clear board, a message field and Remove message](https://wbwriter.app/img/web-control-3ca9986a.webp)
 
 ![A message for the performer shown in yellow below the board on the touchscreen](https://wbwriter.app/img/board-message-226d19b7.webp)
@@ -175,6 +179,8 @@ Any NDI receiver works, for example vMix, OBS with DistroAV, Resolume, NDI Studi
 Run `/Applications/WBWriter.app/Contents/MacOS/WBWriter --selftest`. WBWriter goes live right away and draws a test stroke, which is useful for checking NDI or HDMI routing from the video desk.
 
 Support: simon@4h1m.com
+
+NDI® is a registered trademark of Vizrt NDI AB. Learn more at https://ndi.video/.
 
 ---
 
@@ -219,6 +225,10 @@ Set **Clear gesture** to *Double tap*, or to *None* to hide the button entirely.
 
 No. Pen color and width are set in the setup window before the show, so nothing can change by accident in live mode.
 
+## The touchscreen shows the board wrongly, or WBWriter misbehaves.
+
+With **Web control** turned on, open the remote page on a phone. **Refresh display** rebuilds the touchscreen and HDMI windows without interrupting NDI or losing the writing. If that doesn't help, **Restart WBWriter** (tap twice): the app restarts and returns live with the same board and message.
+
 ## How do I update WBWriter?
 
 WBWriter checks for a new version each time it starts and shows the changelog when one is available. Click **Install and Restart**: it downloads the update, checks that it's signed by 4H1M, replaces the app and opens it again. You can also choose **WBWriter → Check for Updates…** at any time, or turn off the automatic check under **Updates** in the setup window. The check never interrupts live mode.
@@ -227,4 +237,4 @@ WBWriter checks for a new version each time it starts and shows the changelog wh
 
 Open an issue at https://github.com/4H1Mzs/wbwriter/issues, or email simon@4h1m.com.
 
-NDI® is a registered trademark of Vizrt NDI AB.
+NDI® is a registered trademark of Vizrt NDI AB. Learn more at https://ndi.video/.

@@ -110,7 +110,10 @@ Turn on **Web control** in the setup window, then open one of the addresses it s
 - **Clear board.** Tap twice to confirm.
 - **Message to the performer.** It appears in yellow in the hatched area on the touchscreen and stays until you tap **Remove message**, or disappears after 10 seconds, 30 seconds or a minute. It's never sent to NDI or HDMI.
 
-The actions only work while WBWriter is live. If other people share the network, set a PIN. The page asks for it once and remembers it. If the macOS firewall is on, allow incoming connections for WBWriter when asked.
+- **Uptime.** How long WBWriter has been running and how long it has been live, next to the current NDI status and network load.
+- **Recovery.** *Refresh display* rebuilds the touchscreen and HDMI windows when a display shows the board wrongly. The writing, the message and NDI keep running. *Restart WBWriter* (tap twice) restarts the app, and it comes back live with the same board and message.
+
+The board actions only work while WBWriter is live. If other people share the network, set a PIN. The page asks for it once and remembers it. If the macOS firewall is on, allow incoming connections for WBWriter when asked.
 
 ## Receiving the feed
 
@@ -210,7 +213,7 @@ The NDI® SDK headers in `Sources/CNDI/` come from Vizrt NDI AB under the NDI SD
 
 ## Credits
 
-- NDI® is a registered trademark of Vizrt NDI AB. WBWriter uses the NDI® SDK, and the bundled `libndi.dylib` is distributed under the NDI SDK license. See `Contents/Resources/libndi_licenses.txt` in the app bundle and [ndi.video](https://ndi.video).
+- NDI® is a registered trademark of Vizrt NDI AB. WBWriter uses the NDI® SDK, and the bundled `libndi.dylib` is distributed under the NDI SDK license. See `Contents/Resources/libndi_licenses.txt` in the app bundle. Learn more about NDI at [ndi.video](https://ndi.video/).
 - Inspired by [OpenBoard](https://openboard.ch).
 
 © 2026 4H1M, z.s.
