@@ -114,7 +114,8 @@ final class StatusMonitor {
             let fps = Double(frames &- lastFrames) / dt
             lastFrames = frames
             let receivers = sender.connectionCount
-            let healthy = fps >= targetFPS * 0.9
+            // Saving modes send fewer frames on purpose, so only Full is judged by its frame rate.
+            let healthy = sender.bandwidth.isSaving || fps >= targetFPS * 0.9
             let (dot, state): (NSColor, String) =
                 !healthy ? (.systemRed, "NDI DROPPING")
                 : receivers > 0 ? (.systemGreen, "NDI OK")
@@ -122,7 +123,10 @@ final class StatusMonitor {
             item("● ", dot.withAlphaComponent(0.3))
             item(state)
             add(sep); item(sender.sourceName)
-            add(sep); item("\(resolution) @ " + String(format: "%.2f fps", fps))
+            let (ow, oh) = sender.outputSize
+            let sent = sender.bandwidth.scale < 1 ? "\(resolution) → \(ow)×\(oh)" : resolution
+            add(sep); item("\(sent) @ " + String(format: "%.2f fps", fps))
+            if sender.bandwidth.isSaving { add(sep); item(sender.bandwidth.summary) }
             add(sep); item("\(receivers) rx")
             add(sep); item(String(format: "TX %.1f Mb/s", mbps))
         } else {

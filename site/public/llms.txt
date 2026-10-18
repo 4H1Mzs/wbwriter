@@ -2,7 +2,7 @@
 
 > WBWriter is a free, open-source live stage whiteboard for macOS. Performers write on a touchscreen, and the audience sees the writing on the LED wall over NDI® or HDMI, with no UI on stage. It's made by 4H1M Production (4H1M, z.s.), a Czech nonprofit audiovisual production.
 
-Key facts: macOS 13+ (Apple Silicon and Intel), signed and notarized; current version 1.3.3; free; open source under the MIT License on GitHub; clean NDI® 6.3 output (black BGRX or transparent BGRA) at the LED wall's exact resolution, 23.976 to 60 fps; optional HDMI clean feed; optional web control from a phone (clear the board, message the performer). Windows and Linux are coming soon. Support contact: simon@4h1m.com.
+Key facts: macOS 13+ (Apple Silicon and Intel), signed and notarized; current version 1.4.0; free; open source under the MIT License on GitHub; clean NDI® 6.3 output (black BGRX or transparent BGRA) at the LED wall's exact resolution, 23.976 to 60 fps; optional HDMI clean feed; optional web control from a phone (clear the board, message the performer). Windows and Linux are coming soon. Support contact: simon@4h1m.com.
 
 ## Docs
 

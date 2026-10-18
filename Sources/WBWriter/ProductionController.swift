@@ -51,7 +51,8 @@ final class ProductionController {
                 throw ProductionError(errorDescription: "NDI runtime could not be initialised on this Mac.")
             }
             let name = settings.ndiName.trimmingCharacters(in: .whitespaces)
-            guard let s = NDISender(name: name.isEmpty ? "WBWriter" : name, canvas: canvas, frameRate: settings.frameRate) else {
+            guard let s = NDISender(name: name.isEmpty ? "WBWriter" : name, canvas: canvas, frameRate: settings.frameRate,
+                                    bandwidth: settings.ndiBandwidth) else {
                 throw ProductionError(errorDescription: "Could not create the NDI output.")
             }
             sender = s

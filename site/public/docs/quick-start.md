@@ -23,6 +23,9 @@ All settings are in the setup window and are saved between launches.
 | Background | *Black* for a normal feed. *Transparent* for an alpha overlay (BGRA, straight alpha). |
 | Send NDI® | On or off. |
 | NDI source name | Receivers see `MACHINE-NAME (your name)`. |
+| Send | *Every frame*, or *Only when the board changes* (then one frame per second while idle). |
+| Max frame rate while writing | Same as output, 30, 25, 15 or 10 fps. |
+| Resolution over NDI | 100, 75, 50 or 33 % of the output resolution. The receiver scales it back up. |
 | Pen color | White by default. |
 | Pen width | Pixels at 1080p, scaled with the output resolution. Default 8 matches OpenBoard's thickest default pen. |
 | Board display | Which screen is the touchscreen. |
@@ -72,6 +75,16 @@ Turn on **Web control** in the setup window and open one of the addresses it sho
 ![A message for the performer shown in yellow below the board on the touchscreen](https://wbwriter.app/img/board-message-226d19b7.webp)
 
 The actions work only while WBWriter is live. Set a PIN if other people share the network. If the macOS firewall is on, allow incoming connections for WBWriter when asked.
+
+## Save network bandwidth (Wi-Fi)
+
+NDI re-sends the whole picture every frame, and a board full of writing costs far more than a black one. A large board at a high frame rate can need well over 100 Mb/s, which Wi-Fi often can't sustain. To lower it:
+
+- Set **Send** to *Only when the board changes*. After the performer stops writing, traffic drops to almost nothing, even with the writing still on the board.
+- Lower **Max frame rate while writing** to 25 or 15 fps. Writing stays readable, with slightly more latency.
+- Lower **Resolution over NDI**. 50 % needs about a quarter of the bandwidth. White strokes on black only soften slightly.
+
+The setup window estimates the saving, and **TX** in the status line shows the real network load. Ethernet is still the most reliable option for big boards.
 
 ## Receive the feed
 

@@ -17,6 +17,10 @@ macOS 13 or later, on Apple Silicon and Intel. Windows and Linux builds are comi
 - Check that multicast and mDNS (Bonjour) aren't blocked by the network switch or firewall.
 - Look at the status line on the touchscreen. `NDI waiting` means WBWriter is sending and no receiver has connected yet.
 
+## The NDI feed drops out over Wi-Fi.
+
+A big board at a high frame rate can use more than 100 Mb/s while there's writing on it. In the setup window, set **Send** to *Only when the board changes*, lower **Max frame rate while writing**, and lower **Resolution over NDI**. The quick start explains each option. Ethernet is the most reliable fix.
+
 ## Can I key the writing over other graphics?
 
 Yes. Set **Background** to *Transparent*. WBWriter then sends BGRA with straight alpha, so the receiver can key out everything except the writing.

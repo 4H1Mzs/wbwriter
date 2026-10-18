@@ -65,6 +65,37 @@ enum ClearGesture: String, CaseIterable, Identifiable {
     }
 }
 
+/// How the NDI output trades frame rate and resolution for network bandwidth.
+struct NDIBandwidth: Equatable {
+    /// Send a frame only when the board changes, plus one per second while it's idle.
+    var onlyChanges = false
+    /// Highest frame rate while the performer is writing; nil means the output frame rate.
+    var maxFPS: Double?
+    /// Scale of the resolution sent over NDI.
+    var scale: Double = 1
+
+    static let full = NDIBandwidth()
+    static let maxFPSChoices: [Int] = [0, 30, 25, 15, 10]  // 0 = same as output
+    static let scaleChoices: [Int] = [100, 75, 50, 33]
+
+    var isSaving: Bool { onlyChanges || maxFPS != nil || scale < 1 }
+
+    /// Bandwidth while writing, relative to sending every frame at full resolution.
+    func relativeLoad(outputFPS: Double) -> Double {
+        let fps = min(maxFPS ?? outputFPS, outputFPS)
+        return fps / outputFPS * scale * scale
+    }
+
+    /// Short label for the status line, e.g. "changes ≤15 fps 50 %".
+    var summary: String {
+        var parts: [String] = []
+        if onlyChanges { parts.append("changes") }
+        if let maxFPS { parts.append("≤\(Int(maxFPS)) fps") }
+        if scale < 1 { parts.append("\(Int((scale * 100).rounded())) %") }
+        return parts.joined(separator: " ")
+    }
+}
+
 enum CornerLogo: String, CaseIterable, Identifiable {
     case fourH1M, custom, none
     var id: String { rawValue }
@@ -89,6 +120,10 @@ final class AppSettings: ObservableObject {
     @Published var frameRateLabel: String { didSet { defaults.set(frameRateLabel, forKey: "frameRate") } }
     @Published var ndiEnabled: Bool { didSet { defaults.set(ndiEnabled, forKey: "ndiEnabled") } }
     @Published var ndiName: String { didSet { defaults.set(ndiName, forKey: "ndiName") } }
+    @Published var ndiOnlyChanges: Bool { didSet { defaults.set(ndiOnlyChanges, forKey: "ndiOnlyChanges") } }
+    /// 0 means the output frame rate.
+    @Published var ndiMaxFPS: Int { didSet { defaults.set(ndiMaxFPS, forKey: "ndiMaxFPS") } }
+    @Published var ndiScalePercent: Int { didSet { defaults.set(ndiScalePercent, forKey: "ndiScalePercent") } }
     @Published var background: BackgroundMode { didSet { defaults.set(background.rawValue, forKey: "background") } }
     @Published var penColor: Color { didSet { savePenColor() } }
     /// Pen width in pixels on a 1080-line output; scaled with output height.
@@ -118,6 +153,9 @@ final class AppSettings: ObservableObject {
             "frameRate": "30",
             "ndiEnabled": true,
             "ndiName": "WBWriter",
+            "ndiOnlyChanges": false,
+            "ndiMaxFPS": 0,
+            "ndiScalePercent": 100,
             "background": BackgroundMode.black.rawValue,
             "penWidth": defaultPenWidth,
             "boardDisplay": 0,
@@ -137,6 +175,9 @@ final class AppSettings: ObservableObject {
         frameRateLabel = d.string(forKey: "frameRate") ?? "30"
         ndiEnabled = d.bool(forKey: "ndiEnabled")
         ndiName = d.string(forKey: "ndiName") ?? "WBWriter"
+        ndiOnlyChanges = d.bool(forKey: "ndiOnlyChanges")
+        ndiMaxFPS = d.integer(forKey: "ndiMaxFPS")
+        ndiScalePercent = d.integer(forKey: "ndiScalePercent")
         background = BackgroundMode(rawValue: d.string(forKey: "background") ?? "") ?? .black
         penWidth = d.double(forKey: "penWidth")
         boardDisplayID = d.integer(forKey: "boardDisplay")
@@ -202,6 +243,12 @@ final class AppSettings: ObservableObject {
         case .custom: return NSImage(contentsOf: Self.customLogoURL)
         case .none: return nil
         }
+    }
+
+    var ndiBandwidth: NDIBandwidth {
+        NDIBandwidth(onlyChanges: ndiOnlyChanges,
+                     maxFPS: ndiMaxFPS > 0 ? Double(ndiMaxFPS) : nil,
+                     scale: Double(min(max(ndiScalePercent, 10), 100)) / 100)
     }
 
     var frameRate: FrameRate {

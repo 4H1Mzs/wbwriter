@@ -41,6 +41,20 @@ struct SetupView: View {
         )
     }
 
+    private func scaled(_ value: Int, _ percent: Int) -> Int {
+        max(16, Int((Double(value) * Double(percent) / 100).rounded()))
+    }
+
+    private var bandwidthHint: String {
+        let b = settings.ndiBandwidth
+        let fps = Double(settings.frameRate.numerator) / Double(settings.frameRate.denominator)
+        let percent = Int((b.relativeLoad(outputFPS: fps) * 100).rounded())
+        var text = b.isSaving ? "About \(percent) % of the full NDI bandwidth while writing." : "Full NDI bandwidth: every frame at full resolution."
+        if b.onlyChanges { text += " While the board is idle, one frame per second, so almost nothing." }
+        text += " Watch TX in the status line for the real network load."
+        return text
+    }
+
     private var aspectLabel: String {
         let w = settings.outputWidth, h = settings.outputHeight
         guard w > 0, h > 0 else { return "" }
@@ -82,6 +96,24 @@ struct SetupView: View {
                     Toggle("Send NDI®", isOn: $settings.ndiEnabled)
                     TextField("NDI source name", text: $settings.ndiName)
                         .disabled(!settings.ndiEnabled)
+                    Picker("Send", selection: $settings.ndiOnlyChanges) {
+                        Text("Every frame").tag(false)
+                        Text("Only when the board changes").tag(true)
+                    }
+                    .disabled(!settings.ndiEnabled)
+                    Picker("Max frame rate while writing", selection: $settings.ndiMaxFPS) {
+                        ForEach(NDIBandwidth.maxFPSChoices, id: \.self) { fps in
+                            Text(fps == 0 ? "Same as output" : "\(fps) fps").tag(fps)
+                        }
+                    }
+                    .disabled(!settings.ndiEnabled)
+                    Picker("Resolution over NDI", selection: $settings.ndiScalePercent) {
+                        ForEach(NDIBandwidth.scaleChoices, id: \.self) { percent in
+                            Text("\(percent) %  (\(scaled(settings.outputWidth, percent))×\(scaled(settings.outputHeight, percent)))").tag(percent)
+                        }
+                    }
+                    .disabled(!settings.ndiEnabled)
+                    Text(bandwidthHint).font(.caption).foregroundStyle(.secondary)
                 } header: {
                     Text("NDI")
                 } footer: {
